@@ -1,5 +1,9 @@
 
 ## Gtrends-beta
+
+Pulls investment banking queries and utilizes new word disambiguation features of Gtrends Beta.
+Matches on financial firms, investment firms etc then by fuzzy string matching.
+
 ### INSTRUCTIONS:
 pip install -r requirements.txt
 - Requires a Google account
