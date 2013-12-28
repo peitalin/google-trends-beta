@@ -3,7 +3,7 @@
 #############################################################
 # Google Trends Query Utility
 # Author: Dan Garant (dgarant@cs.umass.edu)
-# Modified 16/12/13 Peita Lin (peita_lin@hotmail.com)
+# Modified 29/12/13 Peita Lin (peita_lin@hotmail.com)
 #
 # Can be used with command-line invocation or as a call from another package.
 # Non-standard dependencies: argparse, requests, arrow, fuzzywuzzy

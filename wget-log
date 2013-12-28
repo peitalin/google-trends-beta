@@ -1,8 +1,0 @@
---2013-12-19 19:09:37--  http://dl.google.com/linux/direct/google-musicmanager-beta_current_amd64.deb
-Resolving dl.google.com (dl.google.com)... 74.125.237.201, 74.125.237.193, 74.125.237.199, ...
-Connecting to dl.google.com (dl.google.com)|74.125.237.201|:80... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 3888582 (3.7M) [application/x-debian-package]
-Saving to: ‘google-musicmanager-beta_current_amd64.deb’
-
- 2% [==>                                                                                                                                                        ] 89,947      2.69B/s  eta 16d 8h   4% [=====>                                                                                                                                                     ] 164,255     4.91B/s  eta 16d 8h  
