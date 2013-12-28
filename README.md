@@ -1,5 +1,5 @@
 
-
+## Gtrends-beta
 ### INSTRUCTIONS:
 pip install -r requirements.txt
 - Requires a Google account
@@ -8,21 +8,21 @@ pip install -r requirements.txt
 - input-files: ./input-files/*.txt
 
 
-### EXAMPLE COMMANDS TO EXECUTE
-####Single Keyword to stdout
+#### EXAMPLE COMMANDS TO EXECUTE
+#####Single Keyword to stdout
     python google_trends/trends.py \
         --username dgtesting12 --password justfortesting! \
         --keyword "nexus 5"  \
         --start-date 2012-01 --end-date 2013-01 \
 
-####Batch input from a text file
+#####Batch input from a text file
     python google_trends/trends.py \
         --username dgtesting12 --password justfortesting! --throttle "random" \
         --file input-files/ipo-cycles.txt  \
         --start-date 2013-01 --end-date 2013-6 \
         --category 0-7-107
 
-####Batch input/output to a set directory, names files according to date ranges and categories
+#####Batch input/output to a set directory, names files according to date ranges and categories
     python google_trends/trends.py \
         --username dgtesting12 --password justfortesting! --throttle "random"
         --file input-files/underwriter-set.txt  \
@@ -30,7 +30,7 @@ pip install -r requirements.txt
         --category 0-7-784 \
         --start-date "2004-01" --end-date "2013-12" \
 
-####Disambiguation features: "BofA Merrill Lynch" -> Bank of America (Finance)
+#####Disambiguation features: "BofA Merrill Lynch" -> Bank of America (Finance)
     python google_trends/trends.py \
         --username dgtesting12 --password justfortesting! \
         --category 0-7
@@ -85,7 +85,8 @@ pip install -r requirements.txt
 
 
 
-0: All categories
+#####0: All categories
+
     0-12: Business & Industrial
         0-12-1138: Business Finance
             0-12-1138-1160: Commercial Lending
