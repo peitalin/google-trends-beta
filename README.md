@@ -1,15 +1,12 @@
 
 
-## INSTALL REQUIRED PACKAGES:
+### INSTRUCTIONS:
 pip install -r requirements.txt
-
-
-## INSTRUCTIONS:
-## Requires a Google account
-## You can resume the program anytime:
-## The program skips queries/files that already exist in the output directory.
-## The program READS the files in the input-file folder for keywords to query.
-## input-files: ./input-files/*.txt
+- Requires a Google account
+- You can resume the program anytime:
+- The program skips queries/files that already exist in the output directory.
+- The program READS the files in the input-file folder for keywords to query.
+- input-files: ./input-files/*.txt
 
 
 ### EXAMPLE COMMANDS TO EXECUTE
@@ -46,7 +43,7 @@ python google_trends/trends.py \
 #### UNDERWRITERS
 ######### QUARTERLY + FULL QUERIES
 
-### 0-16-784: Business News
+#### 0-16-784: Business News
     python google_trends/trends.py \
         --username dgtesting12 --password justfortesting! --throttle "random" \
         --file input-files/underwriter_set.txt  \
@@ -62,7 +59,7 @@ python google_trends/trends.py \
         --start-date "2004-01" --end-date "2013-12"
 
 
-### 0-7-37: Banking
+#### 0-7-37: Banking
     python google_trends/trends.py \
         --username dgtesting12 --password justfortesting! --throttle "random" \
         --file input-files/underwriter_set.txt  \
@@ -143,7 +140,7 @@ python google_trends/trends.py \
 #### IPO-CYCLES
 ######### QUARTERLY + FULL QUERIES
 
-### 0-16-784: Business News
+#### 0-16-784: Business News
     python google_trends/trends.py \
         --username dgtesting12 --password justfortesting! --throttle "random" \
         --file input-files/ipo-cycles.txt  \
@@ -158,7 +155,7 @@ python google_trends/trends.py \
         --category 0-12-784 \
         --start-date "2004-01" --end-date "2013-12" \
 
-### 0-7-107: Investing
+#### 0-7-107: Investing
     python google_trends/trends.py \
         --username dgtesting12 --password justfortesting! --throttle "random" \
         --file input-files/ipo-cycles.txt  \
@@ -173,7 +170,7 @@ python google_trends/trends.py \
         --category 0-7-107 \
         --start-date "2004-01" --end-date "2013-12" \
 
-### 0-7-37: Banking
+#### 0-7-37: Banking
     python google_trends/trends.py
         --username dgtesting12 --password justfortesting! --throttle "random" \
         --file input-files/ipo-cycles.txt  \
