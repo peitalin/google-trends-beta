@@ -1,0 +1,136 @@
+
+# Amazon EC2 instance
+
+export GMAIL_USER="halos.laurel13@gmail.com"
+export GMAIL_USER="pika.colt13@gmail.com"
+export GMAIL_USER="tessela.poly13@gmail.com"
+export GMAIL_USER="kenton.slash13@gmail.com"
+export GMAIL_USER="woolford.paul13@gmail.com"
+export GMAIL_USER="hecker.tim13@gmail.com"
+export GMAIL_USER="frahms.ford13@gmail.com"
+
+
+passwords: justfortesting!
+
+##### Dropbox account
+woolford.paul13@gmail.com
+justfortesting!
+
+### sudo chmod 0400 ./dg-beta.pem
+### GNU screen  | ctrl-a c -> new window  | ctrl-a n -> next window
+### GIT Only need to do on 1 account, since they are all synced by pher.florian dropbox.
+git config --global user.name peitalin
+git add .
+git commit -m "last one"
+git push origin master -u
+alias myip="curl -s http://checkip.amazonaws.com"
+
+
+## Install dropbox
+cd ~ && wget -O - "https://www.dropbox.com/download?plat=lnx.x86_64" | tar xzf -
+~/.dropbox-dist/dropboxd
+
+ps aux | grep dropbox
+kill -9
+~/.dropbox-dist/dropbox
+
+###  copy and verify resulting link:
+###     https://www.dropbox.com/cli_link?host_id=5c2316d88c4b178d8ae46508544dee76
+
+sudo apt-get install git tree python-pip -y
+cd $HOME/Dropbox/gtrends-beta
+sudo pip install ipython arrow fuzzywuzzy argparse
+
+
+
+
+
+tree -L 3
+###### SSH LOGINS: AMAZON EC2 INSTANCES
+
+#### One  172.31.7.241
+ssh -i $HOME/Dropbox/dg-beta.pem ubuntu@ec2-54-206-16-30.ap-southeast-2.compute.amazonaws.com
+export GMAIL_USER="halos.laurel13@gmail.com"
+export base_dir="$HOME/Dropbox/gtrends-beta"
+tmux
+
+
+#### Two  172.31.6.187
+ssh -i $HOME/Dropbox/dg-beta.pem ubuntu@ec2-54-206-23-74.ap-southeast-2.compute.amazonaws.com
+export GMAIL_USER="pika.colt13@gmail.com"
+export base_dir="$HOME/Dropbox/gtrends-beta"
+tmux
+
+
+#### Three  172.31.7.219
+ssh -i $HOME/Dropbox/dg-beta.pem ubuntu@ec2-54-206-23-188.ap-southeast-2.compute.amazonaws.com
+export GMAIL_USER="tessela.poly13@gmail.com"
+export base_dir="$HOME/Dropbox/gtrends-beta"
+tmux
+
+
+#### Four  172.31.12.16
+ssh -i $HOME/Dropbox/dg-beta.pem ubuntu@ec2-54-206-24-217.ap-southeast-2.compute.amazonaws.com
+export GMAIL_USER="kenton.slash13@gmail.com"
+export base_dir="$HOME/Dropbox/gtrends-beta"
+tmux
+
+
+#### Five  172.31.14.47
+ssh -i $HOME/Dropbox/dg-beta.pem ubuntu@ec2-54-206-24-163.ap-southeast-2.compute.amazonaws.com
+export GMAIL_USER="woolford.paul13@gmail.com"
+export base_dir="$HOME/Dropbox/gtrends-beta"
+tmux
+
+
+#### Six
+ssh -i $HOME/Dropbox/dg-beta.pem ubuntu@
+export GMAIL_USER="hecker.tim13@gmail.com"
+export base_dir="$HOME/Dropbox/gtrends-beta"
+tmux
+
+
+#### Seven
+ssh -i $HOME/Dropbox/dg-beta.pem ubuntu@
+export GMAIL_USER="frahms.ford13@gmail.com"
+export base_dir="$HOME/Dropbox/gtrends-beta"
+tmux
+
+
+#### 0-16-784: Business News
+
+    python $base_dir/google_trends/trends.py \
+        --username $GMAIL_USER \
+        --password justfortesting! --throttle "random" \
+        --file $base_dir/input-files/underwriter_set.txt  \
+        --output $base_dir/underwriter_set/0-12-784-business-news \
+        --category 0-12-784 \
+        --all-years "2004-01"
+
+
+    python $base_dir/google_trends/trends.py \
+        --username $GMAIL_USER \
+        --password justfortesting! --throttle "random" \
+        --file $base_dir/input-files/underwriter_set.txt  \
+        --output $base_dir/underwriter_set/0-12-784-business-news \
+        --category 0-12-784 \
+        --start-date "2004-01" --end-date "2013-12"
+
+
+#### 0-7-37: Banking
+
+    python $base_dir/google_trends/trends.py \
+        --username dgtesting12 --password justfortesting! --throttle "random" \
+        --file $base_dir/input-files/underwriter_set.txt  \
+        --output $base_dir/underwriter_set/0-7-37-banking \
+        --category 0-7-37 \
+        --all-years "2004-01"
+
+
+    python $base_dir/google_trends/trends.py \
+        --username dgtesting12 --password justfortesting! --throttle "random" \
+        --file $base_dir/input-files/underwriter_set.txt  \
+        --output $base_dir/underwriter_set/0-7-37-banking \
+        --category 0-7-37 \
+        --start-date "2004-01" --end-date "2013-12"
+

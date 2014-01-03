@@ -13,76 +13,132 @@ pip install -r requirements.txt
 
 
 #### EXAMPLE COMMANDS TO EXECUTE
+export GMAIL_USER="dgtesting12@gmail.com"
+export base_dir="$HOME/Dropbox/gtrends-beta"
+
+
 #####Single Keyword to stdout
-    python google_trends/trends.py \
-        --username dgtesting12 --password justfortesting! \
-        --keyword "nexus 5"  \
+    python $base_dir/google_trends/trends.py \
+        --username $GMAIL_USER \
+        --password justfortesting! \
+        --keyword "Woori Investment Securities"  \
         --start-date 2012-01 --end-date 2013-01 \
 
+    python ./google_trends/trends.py \
+        --username $GMAIL_USER \
+        --password justfortesting! \
+        --keyword "Woori Investment Securities"  \
+        --start-date 2012-01 --end-date 2013-01 \
+
+
 #####Batch input from a text file
-    python google_trends/trends.py \
-        --username dgtesting12 --password justfortesting! --throttle "random" \
-        --file input-files/ipo-cycles.txt  \
+    python $base_dir/google_trends/trends.py \
+        --username $GMAIL_USER \
+        --password justfortesting! --throttle "random" \
+        --file $base_dir/input-files/underwriter_set.txt  \
         --start-date 2013-01 --end-date 2013-6 \
         --category 0-7-107
 
 #####Batch input/output to a set directory, names files according to date ranges and categories
-    python google_trends/trends.py \
-        --username dgtesting12 --password justfortesting! --throttle "random"
-        --file input-files/underwriter-set.txt  \
-        --output underwriters/0-12-784-business-news \
+    python $base_dir/google_trends/trends.py \
+        --username $GMAIL_USER \
+        --password justfortesting! --throttle "random"
+        --file $base_dir/input-files/underwriter_set.txt  \
+        --output $base_dir/underwriters/0-12-784-business-news \
         --category 0-7-784 \
         --start-date "2004-01" --end-date "2013-12" \
 
 #####Disambiguation features: "BofA Merrill Lynch" -> Bank of America (Finance)
-    python google_trends/trends.py \
-        --username dgtesting12 --password justfortesting! \
-        --category 0-7
+    python $base_dir/google_trends/trends.py \
+        --username $GMAIL_USER \
+        --password justfortesting! \
         --keyword "BofA Merrill Lynch" \
-        --all-quarters "2004-01"   \
+        --all-quarters "2013-01"   \
+        --throttle "random" \
+        --category 0-7
+
+########
+    python ./google_trends/trends.py \
+        --username $GMAIL_USER \
+        --password justfortesting! \
+        --file $base_dir/input-files/underwriter_set.txt  \
+        --all-quarters "2013-01"   \
         --category 0-7
 
 
 
-
+#$#!#!#!#!#!#!#!#!
+!#!#!#!#!# I SHOULD SPLIT ISSUERS BY YEAR BECAUSE THEY DONT EXIST IN PREVIOUS YEARS, WASTING QUERIES.
+!#!#!#!#!# Find out how to append google context to output
+######!#!#! up to 331 in issuers.txt
 
 
 #### UNDERWRITERS
 ###### QUARTERLY + FULL QUERIES
 
+export base_dir="$HOME/Dropbox/gtrends-beta"
+export GMAIL_USER="dgtesting12@gmail.com"
+
 #### 0-16-784: Business News
-    python google_trends/trends.py \
-        --username dgtesting12 --password justfortesting! --throttle "random" \
-        --file input-files/underwriter_set.txt  \
-        --output underwriter_set/0-12-784-business-news \
+    python $base_dir/google_trends/trends.py \
+        --username $GMAIL_USER \
+        --password justfortesting! \
+        --throttle "random" \
+        --file $base_dir/input-files/underwriter_set.txt  \
+        --output $base_dir/underwriter_set/0-12-784-business-news \
         --category 0-12-784 \
         --all-years "2004-01"
 
-    python google_trends/trends.py \
-        --username dgtesting12 --password justfortesting! --throttle "random" \
-        --file input-files/underwriter_set.txt  \
-        --output underwriter_set/0-12-784-business-news \
+
+    python $base_dir/google_trends/trends.py \
+        --username $GMAIL_USER \
+        --password justfortesting! \
+        --throttle "random" \
+        --file $base_dir/input-files/underwriter_set.txt  \
+        --output $base_dir/underwriter_set/0-12-784-business-news \
         --category 0-12-784 \
         --start-date "2004-01" --end-date "2013-12"
+
 
 
 #### 0-7-37: Banking
-    python google_trends/trends.py \
-        --username dgtesting12 --password justfortesting! --throttle "random" \
-        --file input-files/underwriter_set.txt  \
-        --output underwriter_set/0-7-37-banking \
+    python $base_dir/google_trends/trends.py \
+        --username $GMAIL_USER \
+        --password justfortesting! \
+        --throttle "random" \
+        --file $base_dir/input-files/underwriter_set.txt  \
+        --output $base_dir/underwriter_set/0-7-37-banking \
         --category 0-7-37 \
         --all-years "2004-01"
 
-    python google_trends/trends.py \
-        --username dgtesting12 --password justfortesting! --throttle "random" \
-        --file input-files/underwriter_set.txt  \
-        --output underwriter_set/0-7-37-banking \
+    python $base_dir/google_trends/trends.py \
+        --username $GMAIL_USER \
+        --password justfortesting! \
+        --throttle "random" \
+        --file $base_dir/input-files/underwriter_set.txt  \
+        --output $base_dir/underwriter_set/0-7-37-banking \
         --category 0-7-37 \
         --start-date "2004-01" --end-date "2013-12"
 
 
+#### 0-7: Finance
+    python $base_dir/google_trends/trends.py \
+        --username $GMAIL_USER \
+        --password justfortesting! \
+        --throttle "random" \
+        --file $base_dir/input-files/underwriter_set.txt  \
+        --output $base_dir/underwriter_set/0-7-finance \
+        --category 0-7 \
+        --all-years "2004-01"
 
+    python $base_dir/google_trends/trends.py \
+        --username $GMAIL_USER \
+        --password justfortesting! \
+        --throttle "random" \
+        --file $base_dir/input-files/underwriter_set.txt  \
+        --output $base_dir/underwriter_set/0-7-finance \
+        --category 0-7 \
+        --start-date "2004-01" --end-date "2013-12"
 
 
 

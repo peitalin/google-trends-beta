@@ -1,0 +1,10 @@
+fuzzywuzzy/StringMatcher.py
+fuzzywuzzy/__init__.py
+fuzzywuzzy/fuzz.py
+fuzzywuzzy/process.py
+fuzzywuzzy/string_processing.py
+fuzzywuzzy/utils.py
+pip-egg-info/fuzzywuzzy.egg-info/PKG-INFO
+pip-egg-info/fuzzywuzzy.egg-info/SOURCES.txt
+pip-egg-info/fuzzywuzzy.egg-info/dependency_links.txt
+pip-egg-info/fuzzywuzzy.egg-info/top_level.txt
