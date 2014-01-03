@@ -13,7 +13,7 @@ pip install -r requirements.txt
 
 
 #### EXAMPLE COMMANDS TO EXECUTE
-export GMAIL_USER="dgtesting12@gmail.com"
+export GMAIL_USER="muppet@gmail.com"
 export base_dir="$HOME/Dropbox/gtrends-beta"
 
 
@@ -67,80 +67,12 @@ export base_dir="$HOME/Dropbox/gtrends-beta"
 
 
 
-#$#!#!#!#!#!#!#!#!
-!#!#!#!#!# I SHOULD SPLIT ISSUERS BY YEAR BECAUSE THEY DONT EXIST IN PREVIOUS YEARS, WASTING QUERIES.
-!#!#!#!#!# Find out how to append google context to output
-######!#!#! up to 331 in issuers.txt
+
+
 
 
 #### UNDERWRITERS
 ###### QUARTERLY + FULL QUERIES
-
-export base_dir="$HOME/Dropbox/gtrends-beta"
-export GMAIL_USER="dgtesting12@gmail.com"
-
-#### 0-16-784: Business News
-    python $base_dir/google_trends/trends.py \
-        --username $GMAIL_USER \
-        --password justfortesting! \
-        --throttle "random" \
-        --file $base_dir/input-files/underwriter_set.txt  \
-        --output $base_dir/underwriter_set/0-12-784-business-news \
-        --category 0-12-784 \
-        --all-years "2004-01"
-
-
-    python $base_dir/google_trends/trends.py \
-        --username $GMAIL_USER \
-        --password justfortesting! \
-        --throttle "random" \
-        --file $base_dir/input-files/underwriter_set.txt  \
-        --output $base_dir/underwriter_set/0-12-784-business-news \
-        --category 0-12-784 \
-        --start-date "2004-01" --end-date "2013-12"
-
-
-
-#### 0-7-37: Banking
-    python $base_dir/google_trends/trends.py \
-        --username $GMAIL_USER \
-        --password justfortesting! \
-        --throttle "random" \
-        --file $base_dir/input-files/underwriter_set.txt  \
-        --output $base_dir/underwriter_set/0-7-37-banking \
-        --category 0-7-37 \
-        --all-years "2004-01"
-
-    python $base_dir/google_trends/trends.py \
-        --username $GMAIL_USER \
-        --password justfortesting! \
-        --throttle "random" \
-        --file $base_dir/input-files/underwriter_set.txt  \
-        --output $base_dir/underwriter_set/0-7-37-banking \
-        --category 0-7-37 \
-        --start-date "2004-01" --end-date "2013-12"
-
-
-#### 0-7: Finance
-    python $base_dir/google_trends/trends.py \
-        --username $GMAIL_USER \
-        --password justfortesting! \
-        --throttle "random" \
-        --file $base_dir/input-files/underwriter_set.txt  \
-        --output $base_dir/underwriter_set/0-7-finance \
-        --category 0-7 \
-        --all-years "2004-01"
-
-    python $base_dir/google_trends/trends.py \
-        --username $GMAIL_USER \
-        --password justfortesting! \
-        --throttle "random" \
-        --file $base_dir/input-files/underwriter_set.txt  \
-        --output $base_dir/underwriter_set/0-7-finance \
-        --category 0-7 \
-        --start-date "2004-01" --end-date "2013-12"
-
-
 
 
 
@@ -195,45 +127,57 @@ export GMAIL_USER="dgtesting12@gmail.com"
 
 #### 0-16-784: Business News
     python google_trends/trends.py \
-        --username dgtesting12 --password justfortesting! --throttle "random" \
-        --file input-files/ipo-cycles.txt  \
-        --output ipo-cycles/0-12-784-business-news \
+        --username $GMAIL_USER \
+        --password justfortesting! \
+        --throttle "random" \
+        --file $base_dir/input-files/ipo-cycles.txt  \
+        --output $base_dir/ipo-cycles/0-12-784-business-news \
         --category 0-12-784 \
-        --all-quarters "2004-01" \
+        --all-quarters "2004-01"
 
     python google_trends/trends.py \
-        --username dgtesting12 --password justfortesting! --throttle "random" \
-        --file input-files/ipo-cycles.txt  \
-        --output ipo-cycles/0-12-784-business-news \
+        --username $GMAIL_USER \
+        --password justfortesting! \
+        --throttle "random" \
+        --file $base_dir/input-files/ipo-cycles.txt  \
+        --output $base_dir/ipo-cycles/0-12-784-business-news \
         --category 0-12-784 \
-        --start-date "2004-01" --end-date "2013-12" \
+        --start-date "2004-01" --end-date "2013-12"
 
 #### 0-7-107: Investing
     python google_trends/trends.py \
-        --username dgtesting12 --password justfortesting! --throttle "random" \
-        --file input-files/ipo-cycles.txt  \
-        --output ipo-cycles/0-7-107-investing \
+        --username $GMAIL_USER \
+        --password justfortesting! \
+        --throttle "random" \
+        --file $base_dir/input-files/ipo-cycles.txt  \
+        --output $base_dir/ipo-cycles/0-7-107-investing \
         --category 0-7-107 \
-        --all-quarters "2004-01" \
+        --all-quarters "2004-01"
 
     python google_trends/trends.py \
-        --username dgtesting12 --password justfortesting! --throttle "random" \
-        --file input-files/ipo-cycles.txt  \
-        --output ipo-cycles/0-7-107-investing \
+        --username $GMAIL_USER \
+        --password justfortesting! \
+        --throttle "random" \
+        --file $base_dir/input-files/ipo-cycles.txt  \
+        --output $base_dir/ipo-cycles/0-7-107-investing \
         --category 0-7-107 \
-        --start-date "2004-01" --end-date "2013-12" \
+        --start-date "2004-01" --end-date "2013-12"
 
 #### 0-7-37: Banking
     python google_trends/trends.py
-        --username dgtesting12 --password justfortesting! --throttle "random" \
-        --file input-files/ipo-cycles.txt  \
-        --output ipo-cycles/0-7-37-banking \
+        --username $GMAIL_USER \
+        --password justfortesting! \
+        --throttle "random" \
+        --file $base_dir/input-files/ipo-cycles.txt  \
+        --output $base_dir/ipo-cycles/0-7-37-banking \
         --category 0-7-37 \
-        --all-quarters "2004-01" \
+        --all-quarters "2004-01"
 
     python google_trends/trends.py
-        --username dgtesting12 --password justfortesting! --throttle "random" \
-        --file input-files/ipo-cycles.txt  \
-        --output ipo-cycles/0-7-37-banking \
+        --username $GMAIL_USER \
+        --password justfortesting! \
+        --throttle "random" \
+        --file $base_dir/input-files/ipo-cycles.txt  \
+        --output $base_dir/ipo-cycles/0-7-37-banking \
         --category 0-7-37 \
         --start-date "2004-01" --end-date "2013-12"
