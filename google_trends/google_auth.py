@@ -1,13 +1,19 @@
+#!/usr/bin/env python
+# encoding: utf-8
 
 import requests, sys
-from g_classes import AuthException
+from google_class import AuthException
 
-if sys.version_info.major < 3:
+py3 = sys.version_info[0] == 3
+if not py3:
     from urlparse import urlparse
-elif sys.version_info.major==3:
+else:
     from urllib.parse import urlparse
 
-
+try:
+    from IPython import embed
+except ImportError:
+    pass
 
 DEFAULT_LOGIN_URL = "https://accounts.google.com.au/ServiceLogin"
 DEFAULT_AUTH_URL = "https://accounts.{domain}/ServiceLoginAuth"
@@ -51,8 +57,11 @@ def authenticate_with_google(username, password, login_url=DEFAULT_LOGIN_URL, au
 
     # make a request to the homepage to get the pref and nid cookies
     cookie_resp = sess.get("https://www.{domain}".format(domain=domain), verify=False, allow_redirects=True)
-    # all_requests = ("login_response", "response", "cookie_resp", "sess")
-    # cookies_keys = dict(zip(all_requests, map(lambda x: x.cookies.keys(), all_requests)))
+
+    # all_requests = (login_response, response, cookie_resp, sess)
+    # keyscookies = ("login_response", "response", "cookie_resp", "sess")
+    # cookies_keys = dict(zip(keyscookies, map(lambda x: x.cookies.keys(), all_requests)))
+    # embed()
 
 
     cookies = {"I4SUserLocale" : "en_US"}
@@ -64,10 +73,10 @@ def authenticate_with_google(username, password, login_url=DEFAULT_LOGIN_URL, au
         if key in ("NID", "PREF", "SID"):
             cookies[key] = cookie_resp.cookies[key]
 
-    if "SID" not in cookies or "NID" not in cookies:
-        raise AuthException("Failed to read the necessary cookies. " +
+    if "NID" not in cookies and "SID" not in cookies:
+        raise AuthException("Failed to read the necessary SID & NID cookies. " +
             "This may indicate that Google has changed their login process " +
-            "or the supplied account information is incorrect.")
+            "or the supplied google account details are incorrect.")
 
 
     return sess, cookies, domain

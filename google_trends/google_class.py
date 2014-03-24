@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+# encoding: utf-8
+
+
+from sys import version_info
+py3 = version_info.major == 3
 
 class AuthException(Exception):
     """ Indicates a failure occurred while logging in"""
@@ -24,6 +30,9 @@ class KeywordData(Exception):
         self.title = None
         self.topic = None
         self.desc = None
+        # obtained only from cik-file argument
+        self.cik = None
+        self.filing_date = None
 
     def add_interest_data(self, date, count):
         self.interest.append((date, count))
@@ -31,19 +40,28 @@ class KeywordData(Exception):
     def add_regional_interest(self, date, count):
         self.regional_interest.append((date, count))
 
+
     def __unicode__(self):
-        if self.topic:
+        # Returns query to stdout
+        if not py3 and self.topic:
             try:
-                return u"{0} ({1})".format(unicode(self.title, "UTF-8"),
-                                           unicode(self.desc, "UTF-8"))
+                return u"{0} ({1})".format(self.title.decode("UTF-8"),
+                                           self.desc.decode("UTF-8"))
             except TypeError:
                 return u"{0} ({1})".format(self.title, self.desc)
-        else:
+        elif not py3:
             try:
-                return unicode(self.keyword, "UTF-8")
+                return self.keyword.decode("UTF-8")
             except TypeError:
                 return self.keyword
 
+        elif self.topic:
+            return u"{0} ({1})".format(self.title, self.desc)
+        else:
+            return self.keyword
+
     def __repr__(self):
         return self.__unicode__()
+
+
 
