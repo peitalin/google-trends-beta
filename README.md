@@ -1,8 +1,20 @@
 
 ## Gtrends-beta
 
-Pulls investment banking queries and utilizes new word disambiguation features of Gtrends Beta.
-Matches on financial firms, investment firms etc then by fuzzy string matching.
+The script pulls 'interest-over-time' queries from Google Trends and utilizes the new word disambiguation features of Gtrends Beta (2013 Q4). Matches on financial firms, investment firms etc then by fuzzy string matching.
+
+
+The program inputs the original search term and disambiguates between various
+entity types, then returns the correct company/corporate type matched by phrase similarity. In case there are multiple company types (e.g. Wachovia Securities, Wachovia Group).
+
+Occasionally when the entity name does not match original search term, it is because the company has changed name and Google Trends actually returns the new company name/parent company.
+
+
+### Data Format:
+
+CSV header:
+Date, Entity Name, Entity Type, Original Search Term
+
 
 ### INSTRUCTIONS:
 pip install -r requirements.txt
@@ -13,22 +25,49 @@ pip install -r requirements.txt
 
 
 #### EXAMPLE COMMANDS TO EXECUTE
-export GMAIL_USER="muppet@gmail.com"
+export GMAIL_USER="some_muppet@gmail.com"
 export base_dir="$HOME/Dropbox/gtrends-beta"
 
 
 #####Single Keyword to stdout
-    python $base_dir/google_trends/trends.py \
+    python3 $base_dir/google_trends/trends.py \
         --username $GMAIL_USER \
         --password justfortesting! \
-        --keyword "Woori Investment Securities"  \
-        --start-date 2012-01 --end-date 2013-01 \
+        --keyword "Sparta"  \
+        --start-date 2012-03 --end-date 2012-06 \
+
 
     python ./google_trends/trends.py \
         --username $GMAIL_USER \
         --password justfortesting! \
         --keyword "Woori Investment Securities"  \
         --start-date 2012-01 --end-date 2013-01 \
+
+
+#####Quarterly queries +6 -6 months around a date.
+    python3 $base_dir/google_trends/trends.py \
+        --username $GMAIL_USER \
+        --password justfortesting! \
+        --ipo-quarters "2013-10" \
+        --keyword "Facebook"
+
+
+
+    python $base_dir/google_trends/trends.py \
+        --username $GMAIL_USER \
+        --password justfortesting! \
+        --ipo-quarters "2013-10" \
+        --file $base_dir/input-files/underwriter_set.txt  \
+
+
+    python $base_dir/google_trends/trends.py \
+        --username $GMAIL_USER \
+        --password justfortesting! \
+        --cik-file $base_dir/input-files/cik-ipo.txt  \
+        --output $base_dir/cik-ipo/ \
+        --quiet-io 1
+
+
 
 
 #####Batch input from a text file
@@ -38,6 +77,7 @@ export base_dir="$HOME/Dropbox/gtrends-beta"
         --file $base_dir/input-files/underwriter_set.txt  \
         --start-date 2013-01 --end-date 2013-6 \
         --category 0-7-107
+
 
 #####Batch input/output to a set directory, names files according to date ranges and categories
     python $base_dir/google_trends/trends.py \
