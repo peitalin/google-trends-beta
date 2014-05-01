@@ -20,20 +20,6 @@ categories = ['finance' , 'investing', 'business-news', 'all', 'business_industr
 
 categories = list(zip(cat_codes, categories))
 
-# GMAIL_USER="halos.laurel13@gmail.com"
-# GMAIL_USER="pika.colt13@gmail.com"
-# GMAIL_USER="hecker.tim13@gmail.com"
-# GMAIL_USER="kenton.slash13@gmail.com"
-# GMAIL_USER="woolford.paul13@gmail.com"
-# GMAIL_USER="frahms.ford13@gmail.com"
-# GMAIL_USER="sam.blasko13@gmail.com"
-# GMAIL_USER="fur.florian13@gmail.com"
-# GMAIL_USER="watts.valeska13@gmail.com"
-# GMAIL_USER="henke.phil13@gmail.com"
-# GMAIL_USER="apollonia.verre13@gmail.com"
-# GMAIL_USER="lennon.laika13@gmail.com"
-
-
 
 for ccode, category in categories:
     # Firms names
