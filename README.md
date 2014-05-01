@@ -34,7 +34,7 @@ export base_dir="$HOME/Dropbox/gtrends-beta"
         --username $GMAIL_USER \
         --password justfortesting! \
         --keyword "Sparta"  \
-        --start-date 2012-03 --end-date 2012-06 \
+        --start-date 2012-03 --end-date 2012-06
 
 
     python ./google_trends/trends.py \
@@ -48,7 +48,13 @@ export base_dir="$HOME/Dropbox/gtrends-beta"
     python3 $base_dir/google_trends/trends.py \
         --username $GMAIL_USER \
         --password justfortesting! \
-        --ipo-quarters "2013-10" \
+        --ipo-quarters "2012-05" \
+        --keyword "Facebook"
+
+    python $base_dir/google_trends/trends.py \
+        --username $GMAIL_USER \
+        --password justfortesting! \
+        --ipo-quarters "2012-05" \
         --keyword "Facebook"
 
 

@@ -8,5 +8,5 @@ setup(name='google_trends',
       author=['Dan Garant','Peita Lin']
       author_email='dgarant@cs.umass.edu',
       packages=['google_trends_beta'],
-      install_requires=["argparse", "requests", "arrow", "fuzzywuzzy"]
+      install_requires=["argparse", "requests", "arrow", "fuzzywuzzy", "selenium", "clint", "phantomjs"]
      )

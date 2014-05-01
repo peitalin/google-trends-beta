@@ -43,19 +43,7 @@ class KeywordData(Exception):
 
     def __unicode__(self):
         # Returns query to stdout
-        if not py3 and self.topic:
-            try:
-                return u"{0} ({1})".format(self.title.decode("UTF-8"),
-                                           self.desc.decode("UTF-8"))
-            except TypeError:
-                return u"{0} ({1})".format(self.title, self.desc)
-        elif not py3:
-            try:
-                return self.keyword.decode("UTF-8")
-            except TypeError:
-                return self.keyword
-
-        elif self.topic:
+        if self.topic:
             return u"{0} ({1})".format(self.title, self.desc)
         else:
             return self.keyword
