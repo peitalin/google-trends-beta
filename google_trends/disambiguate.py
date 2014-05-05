@@ -4,7 +4,6 @@
 from __future__ import absolute_import
 from google_class import KeywordData, QuotaException
 from fuzzymatch.utils import fuzz_ratio, fuzz_partial_ratio
-from entity_types import PRIMARY_TYPES, BACKUP_TYPES
 import json, re, sys, arrow
 
 py3 = sys.version_info[0] == 3
