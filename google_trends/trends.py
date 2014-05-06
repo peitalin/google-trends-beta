@@ -98,11 +98,11 @@ def main():
 		for A in command_line_args[:3]]
 
 	[arg_group2.add_argument(A[0], help=help_docs[A[0]], dest=A[1], default=A[2])
-		for A in command_line_args[3:7]]
+		for A in command_line_args[3:5]]
 
 	# General Arguments
 	[parser.add_argument(A[0], help=help_docs[A[0]], dest=A[1], default=A[2])
-		for A in command_line_args[7:]]
+		for A in command_line_args[5:]]
 
 
 	def missing_args(args):
@@ -414,12 +414,12 @@ def quarterly_queries(keywords, category, cookies, session, domain,
 		all_data.append(query_data)
 
 
+	print("Merging with overall period: {s} ~ {e}".format(s=s.date(), e=e.date()))
 	s = begin_period.replace(weeks=-2).datetime
 	e1 = arrow.get(ended_range[-1]).replace(months=+1).datetime
 	e2 = arrow.utcnow().replace(weeks=-1).datetime
 	e = min(e1,e2)
 
-	print("Merging with overall period: {s} ~ {e}".format(s=s.date(), e=e.date()))
 	response_args = {'url': trends_url.format(domain=domain),
 					'params': _query_parameters(s, e, keywords, category),
 					'cookies': cookies,
@@ -475,7 +475,8 @@ def single_query(keywords, category, cookies, session, domain, throttle,
 
 	try:
 		response_args = {'url': trends_url.format(domain=domain),
-						'params': _query_parameters(start, end, keywords, category),
+						'params': _query_parameters(start_date, end_date,
+													keywords, category),
 						'cookies': cookies,
 						'session': session}
 
