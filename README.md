@@ -33,14 +33,14 @@ export base_dir="$HOME/Dropbox/gtrends-beta"
     python3 $base_dir/google_trends/trends.py \
         --username $GMAIL_USER \
         --password justfortesting! \
-        --keyword "Sparta"  \
+        --keyword "Nexus 5"  \
         --start-date 2012-03 --end-date 2012-06
 
 
     python ./google_trends/trends.py \
         --username $GMAIL_USER \
         --password justfortesting! \
-        --keyword "Woori Investment Securities"  \
+        --keyword "Nexus 5"  \
         --start-date 2012-01 --end-date 2013-01 \
 
 
@@ -51,19 +51,6 @@ export base_dir="$HOME/Dropbox/gtrends-beta"
         --ipo-quarters "2012-05" \
         --keyword "Facebook"
 
-    python $base_dir/google_trends/trends.py \
-        --username $GMAIL_USER \
-        --password justfortesting! \
-        --ipo-quarters "2012-05" \
-        --keyword "Facebook"
-
-
-
-    python $base_dir/google_trends/trends.py \
-        --username $GMAIL_USER \
-        --password justfortesting! \
-        --ipo-quarters "2013-10" \
-        --file $base_dir/input-files/underwriter_set.txt  \
 
 
     python $base_dir/google_trends/trends.py \
@@ -102,24 +89,6 @@ export base_dir="$HOME/Dropbox/gtrends-beta"
         --all-quarters "2013-01"   \
         --throttle "random" \
         --category 0-7
-
-########
-    python ./google_trends/trends.py \
-        --username $GMAIL_USER \
-        --password justfortesting! \
-        --file $base_dir/input-files/underwriter_set.txt  \
-        --all-quarters "2013-01"   \
-        --category 0-7
-
-
-
-
-
-
-
-#### UNDERWRITERS
-###### QUARTERLY + FULL QUERIES
-
 
 
 
@@ -166,64 +135,3 @@ export base_dir="$HOME/Dropbox/gtrends-beta"
 
 
 
-
-
-#### IPO-CYCLES
-###### QUARTERLY + FULL QUERIES
-
-#### 0-16-784: Business News
-    python google_trends/trends.py \
-        --username $GMAIL_USER \
-        --password justfortesting! \
-        --throttle "random" \
-        --file $base_dir/input-files/ipo-cycles.txt  \
-        --output $base_dir/ipo-cycles/0-12-784-business-news \
-        --category 0-12-784 \
-        --all-quarters "2004-01"
-
-    python google_trends/trends.py \
-        --username $GMAIL_USER \
-        --password justfortesting! \
-        --throttle "random" \
-        --file $base_dir/input-files/ipo-cycles.txt  \
-        --output $base_dir/ipo-cycles/0-12-784-business-news \
-        --category 0-12-784 \
-        --start-date "2004-01" --end-date "2013-12"
-
-#### 0-7-107: Investing
-    python google_trends/trends.py \
-        --username $GMAIL_USER \
-        --password justfortesting! \
-        --throttle "random" \
-        --file $base_dir/input-files/ipo-cycles.txt  \
-        --output $base_dir/ipo-cycles/0-7-107-investing \
-        --category 0-7-107 \
-        --all-quarters "2004-01"
-
-    python google_trends/trends.py \
-        --username $GMAIL_USER \
-        --password justfortesting! \
-        --throttle "random" \
-        --file $base_dir/input-files/ipo-cycles.txt  \
-        --output $base_dir/ipo-cycles/0-7-107-investing \
-        --category 0-7-107 \
-        --start-date "2004-01" --end-date "2013-12"
-
-#### 0-7-37: Banking
-    python google_trends/trends.py
-        --username $GMAIL_USER \
-        --password justfortesting! \
-        --throttle "random" \
-        --file $base_dir/input-files/ipo-cycles.txt  \
-        --output $base_dir/ipo-cycles/0-7-37-banking \
-        --category 0-7-37 \
-        --all-quarters "2004-01"
-
-    python google_trends/trends.py
-        --username $GMAIL_USER \
-        --password justfortesting! \
-        --throttle "random" \
-        --file $base_dir/input-files/ipo-cycles.txt  \
-        --output $base_dir/ipo-cycles/0-7-37-banking \
-        --category 0-7-37 \
-        --start-date "2004-01" --end-date "2013-12"
