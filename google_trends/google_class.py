@@ -44,7 +44,7 @@ class KeywordData(Exception):
     def __unicode__(self):
         # Returns query to stdout
         if self.topic:
-            return u"{0} ({1})".format(self.title, self.desc)
+            return "{0} ({1})".format(self.title, self.desc)
         else:
             return self.keyword
 

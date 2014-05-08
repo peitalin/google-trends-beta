@@ -35,7 +35,8 @@ except:
 
 try:
     from IPython import embed
-except ImportError("IPython debugging unavailable"):
+except ImportError:
+    print("IPython debugging unavailable")
     pass
 
 

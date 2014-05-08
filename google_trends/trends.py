@@ -346,7 +346,7 @@ def _process_response(response_data):
 	return formatted_data
 
 
-def _check_data(formatted_data):
+def _check_data(keywords, formatted_data):
 	"Check if query is empty. If so, format data accordingly."
 	if 'Worldwide; ' in formatted_data[1] and formatted_data[2]=="":
 		try:
@@ -405,7 +405,7 @@ def quarterly_queries(keywords, category, cookies, session, domain,
 						'cookies': cookies,
 						'session': session}
 
-		query_data = _check_data(
+		query_data = _check_data(keywords,
 						_process_response(
 							_get_response(**response_args)))
 
@@ -414,18 +414,19 @@ def quarterly_queries(keywords, category, cookies, session, domain,
 		all_data.append(query_data)
 
 
-	print("Merging with overall period: {s} ~ {e}".format(s=s.date(), e=e.date()))
+
 	s = begin_period.replace(weeks=-2).datetime
 	e1 = arrow.get(ended_range[-1]).replace(months=+1).datetime
 	e2 = arrow.utcnow().replace(weeks=-1).datetime
 	e = min(e1,e2)
+	print("Merging with overall period: {s} ~ {e}".format(s=s.date(), e=e.date()))
 
 	response_args = {'url': trends_url.format(domain=domain),
 					'params': _query_parameters(s, e, keywords, category),
 					'cookies': cookies,
 					'session': session}
 
-	query_data = _check_data(
+	query_data = _check_data(keywords,
 					_process_response(
 						_get_response(**response_args)))
 
@@ -480,7 +481,7 @@ def single_query(keywords, category, cookies, session, domain, throttle,
 						'cookies': cookies,
 						'session': session}
 
-		query_data = _check_data(
+		query_data = _check_data(keywords,
 						_process_response(
 							_get_response(**response_args)))
 
