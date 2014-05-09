@@ -10,18 +10,18 @@ entity types, then returns the correct company/corporate type matched by phrase 
 Occasionally when the entity name does not match original search term, it is because the company has changed name and Google Trends actually returns the new company name/parent company.
 
 
-### Data Format:
-
-CSV header:
-Date, Entity Name, Entity Type, Original Search Term
-
 
 ### INSTRUCTIONS:
 pip install -r requirements.txt
 - Requires a Google account
-- The program skips queries/files that already exist in the output directory.
-- The program READS the files in the input-file folder for keywords to query.
-- input-files: ./input-files/*.txt
+
+Requires: PhantomJS if running over remote servers. Google sometimes requires mobile authentication when loggin in from new locations/IPs.
+
+Arch Linux: sudo pacman -S phantomjs
+Ubuntu: sudo apt-get install phantomjs
+OSX:    sudo brew install phantomjs
+
+**Python 2 not supported.
 
 
 #### EXAMPLE COMMANDS TO EXECUTE
@@ -37,12 +37,6 @@ export base_dir="$HOME/Dropbox/gtrends-beta"
         --start-date 2012-03 --end-date 2012-06
 
 
-    python ./google_trends/trends.py \
-        --username $GMAIL_USER \
-        --password justfortesting! \
-        --keyword "Nexus 5"  \
-        --start-date 2012-01 --end-date 2013-01 \
-
 
 #####Quarterly queries +6 -6 months around a date.
     python3 $base_dir/google_trends/trends.py \
@@ -53,7 +47,7 @@ export base_dir="$HOME/Dropbox/gtrends-beta"
 
 
 
-    python $base_dir/google_trends/trends.py \
+    python3 $base_dir/google_trends/trends.py \
         --username $GMAIL_USER \
         --password justfortesting! \
         --cik-file $base_dir/input-files/cik-ipo.txt  \
@@ -64,7 +58,7 @@ export base_dir="$HOME/Dropbox/gtrends-beta"
 
 
 #####Batch input from a text file
-    python $base_dir/google_trends/trends.py \
+    python3 $base_dir/google_trends/trends.py \
         --username $GMAIL_USER \
         --password justfortesting! --throttle "random" \
         --file $base_dir/input-files/underwriter_set.txt  \
@@ -73,7 +67,7 @@ export base_dir="$HOME/Dropbox/gtrends-beta"
 
 
 #####Batch input/output to a set directory, names files according to date ranges and categories
-    python $base_dir/google_trends/trends.py \
+    python3 $base_dir/google_trends/trends.py \
         --username $GMAIL_USER \
         --password justfortesting! --throttle "random"
         --file $base_dir/input-files/underwriter_set.txt  \
@@ -82,13 +76,19 @@ export base_dir="$HOME/Dropbox/gtrends-beta"
         --start-date "2004-01" --end-date "2013-12" \
 
 #####Disambiguation features: "BofA Merrill Lynch" -> Bank of America (Finance)
-    python $base_dir/google_trends/trends.py \
+    python3 $base_dir/google_trends/trends.py \
         --username $GMAIL_USER \
         --password justfortesting! \
         --keyword "BofA Merrill Lynch" \
         --all-quarters "2013-01"   \
         --throttle "random" \
         --category 0-7
+
+
+
+### Data Format:
+CSV header:
+Date, Entity Name, Entity Type, Original Search Term
 
 
 
