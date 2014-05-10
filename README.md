@@ -68,7 +68,7 @@ Define valid entity types in __entity_types.py__. Currently filters for companie
 
 Iterates quarterly queries (for daily data) then merges with long term trends data through interpolation (log10 changes in daily interest).
 
-![alt tag](https://github.com/peitalin/gtrends-beta/blob/master/input-files/merged_Facebook2.png)
+![alt tag](https://raw.githubusercontent.com/peitalin/gtrends-beta/master/input-files/merged_Facebook2.png)
 
 
 #####Batch input from a text file
