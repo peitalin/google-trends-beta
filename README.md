@@ -12,11 +12,9 @@ entity types, then returns the correct company/corporate type matched by phrase 
 ### INSTRUCTIONS:
 pip install -r requirements.txt
 
-
 Requires:
 - Google account
 - PhantomJS + Selenium webdriver if running this program over remote servers. Google sometimes requires mobile authentication when loggin in from new locations/IPs.
-
 
 ######Arch Linux:
     sudo pacman -S phantomjs
@@ -36,14 +34,18 @@ Requires:
 
 
 #####Single keyword to std out
-######Disambiguation features:
-Define valid entity types in __entity_types.py__. Currently filters for companies and investment banking firms. "Tesla" returns "Tesla Motors" queries rather than "Nikola Tesla" or "tesla coils" for example.
 
     python3 $base_dir/google_trends/trends.py \
         --username $GMAIL_USER \
         --password justfortesting! \
         --keyword "Tesla"  \
         --start-date 2012-03 --end-date 2012-06
+
+
+######Disambiguation features:
+This query returns "Tesla Motors" queries rather than "Nikola Tesla" or "tesla coils" for example.
+
+To get different entity types, define entity types in __entity_types.py__. Currently filters for companies and investment banking firms.
 
 
 #####Category filters: BofA Merrill Lynch -> Category 0-7 (Finance)
