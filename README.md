@@ -13,55 +13,74 @@ Occasionally when the entity name does not match original search term, it is bec
 
 ### INSTRUCTIONS:
 pip install -r requirements.txt
-- Requires a Google account
 
-Requires: PhantomJS if running over remote servers. Google sometimes requires mobile authentication when loggin in from new locations/IPs.
 
-Arch Linux: sudo pacman -S phantomjs
-Ubuntu: sudo apt-get install phantomjs
-OSX:    sudo brew install phantomjs
+Requires:
+- Google account
+- PhantomJS + Selenium webdriver if running this program over remote servers. Google sometimes requires mobile authentication when loggin in from new locations/IPs.
+
+
+Arch Linux:
+    sudo pacman -S phantomjs
+
+Ubuntu:
+    sudo apt-get install phantomjs
+
+OS X:
+    sudo brew install phantomjs
 
 **Python 2 not supported.
 
 
 #### EXAMPLE COMMANDS TO EXECUTE
-export GMAIL_USER="some_muppet@gmail.com"
-export base_dir="$HOME/Dropbox/gtrends-beta"
+export GMAIL_USER="username@gmail.com"
+export base_dir="$HOME/gtrends-beta"
 
 
 #####Single Keyword to stdout
+Disambiguation features:
+Define valid entity types in __entity_types.py__. Currently filters for companies and investment banking firms. Tesla returns Teslam Motors queries rather than Nikola Tesla or tesla coils for example.
+
     python3 $base_dir/google_trends/trends.py \
         --username $GMAIL_USER \
         --password justfortesting! \
-        --keyword "Nexus 5"  \
+        --keyword "Tesla"  \
         --start-date 2012-03 --end-date 2012-06
 
 
-
-#####Quarterly queries +6 -6 months around a date.
+#####Category filters: BofA Merrill Lynch -> Category 0-7 (Finance)
     python3 $base_dir/google_trends/trends.py \
         --username $GMAIL_USER \
         --password justfortesting! \
-        --ipo-quarters "2012-05" \
+        --keyword "BofA Merrill Lynch" \
+        --throttle "random" \
+        --category 0-7
+
+
+
+
+##### Quarterly queries -6 +24 months around a date.
+
+    python3 $base_dir/google_trends/trends.py \
+        --username $GMAIL_USER \
+        --password justfortesting! \
+        --quarterly "2012-05" \
         --keyword "Facebook"
 
 
-
-    python3 $base_dir/google_trends/trends.py \
-        --username $GMAIL_USER \
-        --password justfortesting! \
-        --cik-file $base_dir/input-files/cik-ipo.txt  \
-        --output $base_dir/cik-ipo/ \
-        --quiet-io 1
+Iterates quarterly queries (for daily data) then merges with long term trends data through interpolation (log10 changes in daily interest).
 
 
+![alt tag](http://url/to/img.png)
 
 
 #####Batch input from a text file
+!Deprecated, use
+
     python3 $base_dir/google_trends/trends.py \
         --username $GMAIL_USER \
         --password justfortesting! --throttle "random" \
-        --file $base_dir/input-files/underwriter_set.txt  \
+        --file $base_dir/input-files/test.txt  \
         --start-date 2013-01 --end-date 2013-6 \
         --category 0-7-107
 
@@ -69,21 +88,12 @@ export base_dir="$HOME/Dropbox/gtrends-beta"
 #####Batch input/output to a set directory, names files according to date ranges and categories
     python3 $base_dir/google_trends/trends.py \
         --username $GMAIL_USER \
-        --password justfortesting! --throttle "random"
-        --file $base_dir/input-files/underwriter_set.txt  \
+        --password justfortesting! \
+        --throttle "random" \
+        --file $base_dir/input-files/test.txt  \
         --output $base_dir/underwriters/0-12-784-business-news \
         --category 0-7-784 \
         --start-date "2004-01" --end-date "2013-12" \
-
-#####Disambiguation features: "BofA Merrill Lynch" -> Bank of America (Finance)
-    python3 $base_dir/google_trends/trends.py \
-        --username $GMAIL_USER \
-        --password justfortesting! \
-        --keyword "BofA Merrill Lynch" \
-        --all-quarters "2013-01"   \
-        --throttle "random" \
-        --category 0-7
-
 
 
 ### Data Format:
@@ -92,7 +102,7 @@ Date, Entity Name, Entity Type, Original Search Term
 
 
 
-#####0: All categories
+##### Finance Categories
 
     0-12: Business & Industrial
         0-12-1138: Business Finance
