@@ -1,14 +1,12 @@
 
 ## Gtrends-beta
 
-The script pulls 'interest-over-time' queries from Google Trends and utilizes the new word disambiguation features of Gtrends Beta (2013 Q4). Matches on financial firms, investment firms etc then by fuzzy string matching.
+The script pulls 'interest-over-time' queries from Google Trends and utilizes the new word disambiguation features of Gtrends Beta (2013 Q4). Matches on specified entity types and category.
 
 
 The program inputs the original search term and disambiguates between various
-entity types, then returns the correct company/corporate type matched by phrase similarity. In case there are multiple company types (e.g. Wachovia Securities, Wachovia Group).
-
-Occasionally when the entity name does not match original search term, it is because the company has changed name and Google Trends actually returns the new company name/parent company.
-
+entity types, then returns the correct company/corporate type matched by phrase similarity. In case there are multiple company types (e.g. Wachovia Securities, Wachovia Group). Default entity types are firms and investment banks.
+**Python 2 not supported.
 
 
 ### INSTRUCTIONS:
@@ -20,26 +18,26 @@ Requires:
 - PhantomJS + Selenium webdriver if running this program over remote servers. Google sometimes requires mobile authentication when loggin in from new locations/IPs.
 
 
-Arch Linux:
+######Arch Linux:
     sudo pacman -S phantomjs
 
-Ubuntu:
+######Ubuntu:
     sudo apt-get install phantomjs
 
-OS X:
+######OS X:
     sudo brew install phantomjs
 
-**Python 2 not supported.
 
 
-#### EXAMPLE COMMANDS TO EXECUTE
-export GMAIL_USER="username@gmail.com"
-export base_dir="$HOME/gtrends-beta"
+
+#### EXAMPLE COMMANDS
+    export GMAIL_USER="username@gmail.com"
+    export base_dir="$HOME/gtrends-beta"
 
 
-#####Single Keyword to stdout
-Disambiguation features:
-Define valid entity types in __entity_types.py__. Currently filters for companies and investment banking firms. "Tesla" returns __Tesla Motors__ queries rather than Nikola Tesla or tesla coils for example.
+#####Single keyword to std out
+######Disambiguation features:
+Define valid entity types in __entity_types.py__. Currently filters for companies and investment banking firms. "Tesla" returns "Tesla Motors" queries rather than "Nikola Tesla" or "tesla coils" for example.
 
     python3 $base_dir/google_trends/trends.py \
         --username $GMAIL_USER \
@@ -49,6 +47,7 @@ Define valid entity types in __entity_types.py__. Currently filters for companie
 
 
 #####Category filters: BofA Merrill Lynch -> Category 0-7 (Finance)
+
     python3 $base_dir/google_trends/trends.py \
         --username $GMAIL_USER \
         --password justfortesting! \
@@ -69,11 +68,10 @@ Define valid entity types in __entity_types.py__. Currently filters for companie
 
 Iterates quarterly queries (for daily data) then merges with long term trends data through interpolation (log10 changes in daily interest).
 
-![alt tag](https://github.com/peitalin/gtrends-beta/blob/master/input-files/merged_Facebook.png)
+![alt tag](https://github.com/peitalin/gtrends-beta/blob/master/input-files/merged_Facebook2.png)
 
 
 #####Batch input from a text file
-!Deprecated, use
 
     python3 $base_dir/google_trends/trends.py \
         --username $GMAIL_USER \
@@ -83,21 +81,12 @@ Iterates quarterly queries (for daily data) then merges with long term trends da
         --category 0-7-107
 
 
-#####Batch input/output to a set directory, names files according to date ranges and categories
-    python3 $base_dir/google_trends/trends.py \
-        --username $GMAIL_USER \
-        --password justfortesting! \
-        --throttle "random" \
-        --file $base_dir/input-files/test.txt  \
-        --output $base_dir/underwriters/0-12-784-business-news \
-        --category 0-7-784 \
-        --start-date "2004-01" --end-date "2013-12" \
+
 
 
 ### Data Format:
 CSV header:
 Date, Entity Name, Entity Type, Original Search Term
-
 
 
 ##### Finance Categories
@@ -139,7 +128,16 @@ Date, Entity Name, Entity Type, Original Search Term
         0-7-619: Retirement & Pension
 
 
+### License
 
+Copyright (C) 2014 Peita Lin
 
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
 
-
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
