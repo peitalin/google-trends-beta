@@ -39,7 +39,7 @@ export base_dir="$HOME/gtrends-beta"
 
 #####Single Keyword to stdout
 Disambiguation features:
-Define valid entity types in __entity_types.py__. Currently filters for companies and investment banking firms. Tesla returns Teslam Motors queries rather than Nikola Tesla or tesla coils for example.
+Define valid entity types in __entity_types.py__. Currently filters for companies and investment banking firms. "Tesla" returns __Tesla Motors__ queries rather than Nikola Tesla or tesla coils for example.
 
     python3 $base_dir/google_trends/trends.py \
         --username $GMAIL_USER \
@@ -58,7 +58,6 @@ Define valid entity types in __entity_types.py__. Currently filters for companie
 
 
 
-
 ##### Quarterly queries -6 +24 months around a date.
 
     python3 $base_dir/google_trends/trends.py \
@@ -70,8 +69,7 @@ Define valid entity types in __entity_types.py__. Currently filters for companie
 
 Iterates quarterly queries (for daily data) then merges with long term trends data through interpolation (log10 changes in daily interest).
 
-
-![alt tag](http://url/to/img.png)
+![alt tag](https://github.com/peitalin/gtrends-beta/blob/master/input-files/merged_Facebook.png)
 
 
 #####Batch input from a text file
