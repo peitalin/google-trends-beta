@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-# encoding: utf-8
+#!/usr/bin/python3
+# encoding: latin-1
 
 #############################################################
 # Google Trends Query Utility
@@ -22,14 +22,10 @@ from google_auth    import authenticate_with_google
 from google_class   import FormatException, QuotaException, KeywordData
 from disambiguate   import disambiguate_keywords
 from interpolate    import interpolate_ioi, conform_interest_over_time, change_in_ioi
-
-py3 = sys.version_info[0] == 3
-try:
-	from IPython import embed
-except ImportError("IPython debugging unavailable"):
-	pass
+from entity_types   import PRIMARY_TYPES, BACKUP_TYPES
 
 
+PY3 = sys.version_info[0] == 3
 DEFAULT_LOGIN_URL = "https://accounts.google.com.au/ServiceLogin"
 DEFAULT_AUTH_URL = "https://accounts.{domain}/ServiceLoginAuth"
 DEFAULT_TRENDS_URL = "http://www.{domain}/trends/trendsReport"
@@ -114,7 +110,7 @@ def main():
 			sys.stderr.write("ERROR: Use --keywords or --file, try --help for details.\n")
 			sys.exit(5)
 		elif args.quarterly and not args.start_date and not args.end_date:
-			sys.stderr.write("ERROR: --quarterly requires a filing-date." +
+			sys.stderr.write("ERROR: --quarterly requires a starting date." +
 				" Try: --quarterly 2012-01 (day insensitive)")
 		if args.cik_file and (args.start_date == NOW):
 			print('Mixing --cik-file and --start-date, ignoring --start-date.')
@@ -178,6 +174,7 @@ def main():
 
 		elif args.cik_file:
 			with open(args.cik_file) as source:
+
 				keywords = [f.strip().split('|') for f in source.readlines()]
 				try:
 					assert all([len(k)==3 for k in keywords])
@@ -185,7 +182,7 @@ def main():
 					print('--cik-file: Bad format, try using pipe delimited (|) data.')
 					sys.exit(1)
 
-		if not py3:
+		if not PY3:
 			try:
 				keywords = [k.decode('latin-1') for k in keywords]
 			except AttributeError:
@@ -220,7 +217,17 @@ def main():
 
 
 
-def get_trends(keyword_gen, trends_url=DEFAULT_TRENDS_URL, login_url=DEFAULT_LOGIN_URL, auth_url=DEFAULT_AUTH_URL, username=None, password=None, quarterly=None, start_date=arrow.utcnow().replace(months=-2), end_date=arrow.utcnow(), throttle=0, category=None):
+def get_trends(keyword_gen, username=None, password=None,
+			   start_date=arrow.utcnow().replace(months=-2),
+			   end_date=arrow.utcnow(),
+			   throttle=0,
+			   quarterly=None,
+			   category=None,
+			   trends_url=DEFAULT_TRENDS_URL,
+			   login_url=DEFAULT_LOGIN_URL,
+			   auth_url=DEFAULT_AUTH_URL,
+			   primary_types=PRIMARY_TYPES,
+			   backup_types=BACKUP_TYPES):
 	""" Gets a collection of trends. Requires --keywords, --username and --password flags.
 
 		Arguments:
@@ -244,7 +251,9 @@ def get_trends(keyword_gen, trends_url=DEFAULT_TRENDS_URL, login_url=DEFAULT_LOG
 
 	while True: # For each keyword:
 		try:	# try to get correct keywords [KeywordData object(s)].
-			keywords = disambiguate_keywords(keyword_gen, session, cookies)
+			keywords = disambiguate_keywords(keyword_gen, session, cookies,
+											primary_types=primary_types,
+											backup_types=backup_types)
 		except StopIteration:
 			break
 

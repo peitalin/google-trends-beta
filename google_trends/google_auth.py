@@ -242,8 +242,6 @@ class ColoredString(object):
 
 
 
-def black(string, always=False, bold=False):
-    return ColoredString('BLACK', string, always_color=always, bold=bold)
 
 def red(string, always=False, bold=False):
     return ColoredString('RED', string, always_color=always, bold=bold)
@@ -262,7 +260,4 @@ def magenta(string, always=False, bold=False):
 
 def cyan(string, always=False, bold=False):
     return ColoredString('CYAN', string, always_color=always, bold=bold)
-
-def white(string, always=False, bold=False):
-    return ColoredString('WHITE', string, always_color=always, bold=bold)
 

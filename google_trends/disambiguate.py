@@ -1,58 +1,23 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from __future__ import absolute_import
+
 from google_class import KeywordData, QuotaException
-from fuzzymatch.utils import fuzz_ratio, fuzz_partial_ratio
-import json, re, sys, arrow
+import json, re, sys, string, unicodedata
+import arrow
+from difflib import SequenceMatcher
 
-py3 = sys.version_info[0] == 3
-try:
-    from IPython import embed
-except ImportError("IPython debugging unavailable"):
-    pass
-
-
+PY3 = sys.version_info[0] == 3
 ENTITY_QUERY_URL = "http://www.google.com/trends/entitiesQuery"
 NUM_KEYWORDS_PER_REQUEST = 1
 ## WARNING: 1 keyword per request, otherwise Google Trends returns
 ## RELATIVE search frequencies of keywords.
 
-PRIMARY_TYPES = {
-    'investment banking company',
-    'financial services company',
-    'finance company',
-    'investment company',
-    'commercial banking company',
-    'commercial bank business',
-    'conglomerate company',
-    'consumer electronics company',
-    'corporation',
-    'retail company',
-    'software company',
-    'energy company',
-    'health care company',
-    'private equity company',
-    'company'
-}
 
-BACKUP_TYPES = {
-    'business',
-    'commercial bank business',
-    'organization leader',
-    'business operation',
-    'restaurant',
-    'brand',
-    'investment',
-    'website',
-    'service',
-    'designer'
-}
 
 def disambiguate_keywords(keyword_generator, session, cookies,
+                          primary_types, backup_types,
                           url=ENTITY_QUERY_URL,
-                          primary_types=PRIMARY_TYPES,
-                          backup_types=BACKUP_TYPES,
                           keywords_to_return=NUM_KEYWORDS_PER_REQUEST):
     """ Extracts a subset of the keywords from the
         generator and maps these keywords to the most
@@ -73,8 +38,8 @@ def disambiguate_keywords(keyword_generator, session, cookies,
         for keyword in keyword_generator:
 
             # special cases: --cik-ipos, --ipo-quarters flags.
-            ipo_filings = len(keyword) == 3
-            if ipo_filings:
+            cik_filings = len(keyword) == 3
+            if cik_filings:
                 cik, keyword, filing_date = keyword
 
 
@@ -95,7 +60,7 @@ def disambiguate_keywords(keyword_generator, session, cookies,
                 else:
                     meanings = None
 
-            except ValueError: # thrown when content is not JSON (i.e. automated queries message)
+            except ValueError: # thrown when content is not JSON
                 raise QuotaException("The request quota has been reached. " +
                             "This may be the daily quota (~500 queries?) or the rate limiting quota. " + "Couldn't load entity data.")
 
@@ -112,15 +77,14 @@ def disambiguate_keywords(keyword_generator, session, cookies,
                 kw_data.title = entity_dict["title"]
                 kw_data.desc = entity_dict["type"]
 
-            if ipo_filings:
+            if cik_filings:
                 kw_data.cik = cik
                 kw_data.filing_date = filing_date
 
             data.append(kw_data)
-
-
             if len(data) == NUM_KEYWORDS_PER_REQUEST:
                 break
+
     except StopIteration:
         pass
     if not data:
@@ -131,6 +95,16 @@ def disambiguate_keywords(keyword_generator, session, cookies,
 
 
 
+
+def fuzz_ratio(s1,  s2):
+    "Wrapper for difflib sequence matcher"
+    assert type(s1) == str
+    assert type(s2) == str
+    if len(s1) == 0 or len(s2) == 0:
+        return 0
+
+    sm = SequenceMatcher(None, s1, s2)
+    return round(100 * sm.ratio())
 
 
 
