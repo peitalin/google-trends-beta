@@ -263,6 +263,7 @@ def get_trends(keyword_gen, username=None, password=None,
 				print('cik:', keyword.cik, '\nfiling date: ', keyword.filing_date)
 
 
+        # from IPython import embed; embed()
 		fn_args = {'keywords': keywords, 'category':category,
 				   'cookies': cookies, 'session': session,
 				   'domain': domain, 'throttle': throttle }
@@ -386,6 +387,7 @@ def quarterly_queries(keywords, category, cookies, session, domain,
 	begin_period = arrow.get(filing_date).replace(months=month_offset[0])
 	ended_period = arrow.get(filing_date).replace(months=month_offset[1])
 
+	# Set up date ranges to iterate queries across
 	start_range = aw_range('month', YYYY_MM(begin_period),
 									YYYY_MM(ended_period))
 	ended_range = aw_range('month', YYYY_MM(begin_period).replace(months=3),
@@ -394,12 +396,14 @@ def quarterly_queries(keywords, category, cookies, session, domain,
 	start_range = [r.datetime for r in start_range][::3]
 	ended_range = [r.datetime for r in ended_range][::3]
 
+	# Fix last date if incomplete quarter (offset -1 week from today)
 	last_week = arrow.utcnow().replace(weeks=-1).datetime
 	start_range = [d for d in start_range if d < last_week]
 	ended_range = [d for d in ended_range if d < last_week]
 	if len(ended_range) < len(start_range):
 		ended_range += [last_week]
 
+	# Iterate attention queries through each quarter
 	all_data = []
 	for start, end in zip(start_range, ended_range):
 		if start > last_week:
@@ -423,17 +427,19 @@ def quarterly_queries(keywords, category, cookies, session, domain,
 		all_data.append(query_data)
 
 
-
+	# Get overall long-term trend data across entire queried period
 	s = begin_period.replace(weeks=-2).datetime
 	e1 = arrow.get(ended_range[-1]).replace(months=+1).datetime
 	e2 = arrow.utcnow().replace(weeks=-1).datetime
 	e = min(e1,e2)
 	print("Merging with overall period: {s} ~ {e}".format(s=s.date(), e=e.date()))
 
-	response_args = {'url': trends_url.format(domain=domain),
-					'params': _query_parameters(s, e, keywords, category),
-					'cookies': cookies,
-					'session': session}
+	response_args = {
+		'url': trends_url.format(domain=domain),
+		'params': _query_parameters(s, e, keywords, category),
+		'cookies': cookies,
+		'session': session
+		}
 
 	query_data = _check_data(keywords,
 					_process_response(
@@ -441,8 +447,9 @@ def quarterly_queries(keywords, category, cookies, session, domain,
 
 	if len(query_data) > 1:
 		# compute changes in IoI (interest over time) per quarter
-		# cannot mix quarters due to normalization within quarters
-		# just index the first change in IoI to 1.
+		# and merged quarters together after interpolating data
+		# with daily data.
+		# We cannot mix quarters as Google normalizes each query
 		all_ioi_delta = []
 		qdat_interp = []
 		for quarter_data in all_data:
@@ -484,11 +491,12 @@ def single_query(keywords, category, cookies, session, domain, throttle,
 	"Single period queries"
 
 	try:
-		response_args = {'url': trends_url.format(domain=domain),
-						'params': _query_parameters(start_date, end_date,
-													keywords, category),
-						'cookies': cookies,
-						'session': session}
+		response_args = {
+			'url': trends_url.format(domain=domain),
+			'params': _query_parameters(start_date, end_date, keywords, category),
+			'cookies': cookies,
+			'session': session
+			}
 
 		query_data = _check_data(keywords,
 						_process_response(

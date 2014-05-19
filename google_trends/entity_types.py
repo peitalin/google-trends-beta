@@ -14,6 +14,7 @@ PRIMARY_TYPES = {
     'energy company',
     'health care company',
     'private equity company',
+    'automaker company',
     'company'
 }
 

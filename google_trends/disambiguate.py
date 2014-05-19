@@ -46,14 +46,16 @@ def disambiguate_keywords(keyword_generator, session, cookies,
             entity_data = session.get(url, params={"q": keyword})
             try:
                 entities = json.loads(entity_data.content.decode('utf-8'))["entityList"]
-                firms = [e for e in entities if e['type'].lower() in primary_types]
+                firms = [e for e in entities
+                        if e['type'].lower() in primary_types
+                        or 'company' in e['type']]
                 if not firms:
                     firms = [e for e in entities if e['type'].lower() in backup_types]
 
                 # fuzzy string matching to pick best match
                 if firms:
                     fuzz_scores = list(map(lambda x: fuzz_ratio(keyword, x['title']), firms))
-                    if max(fuzz_scores) > 60:
+                    if max(fuzz_scores) > 50:
                         meanings = max(zip(fuzz_scores, firms))[1]
                     else:
                         meanings = None
@@ -62,7 +64,8 @@ def disambiguate_keywords(keyword_generator, session, cookies,
 
             except ValueError: # thrown when content is not JSON
                 raise QuotaException("The request quota has been reached. " +
-                            "This may be the daily quota (~500 queries?) or the rate limiting quota. " + "Couldn't load entity data.")
+                                    "This may be the daily quota (~500 queries?)" +
+                                    "or the rate limiting quota.")
 
             if not meanings:
                 fixed_keyword = keyword
