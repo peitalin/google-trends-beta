@@ -2,11 +2,11 @@
 
 from distutils.core import setup
 
-setup(name='google_trends',
-      version='0.5',
-      description='Batch Querying Tool for Google Trends',
-      author=['Dan Garant','Peita Lin']
-      author_email='dgarant@cs.umass.edu',
+setup(name='google_trends_beta',
+      version='0.9',
+      description='Google Trends + Entity Recognition',
+      author=['Peita Lin', 'Dan Garant'],
+      author_email='peita_lin@hotmail.com',
       packages=['google_trends_beta'],
-      install_requires=["argparse", "requests", "arrow", "fuzzywuzzy", "selenium", "clint", "phantomjs"]
+      install_requires=["argparse", "requests", "arrow", "selenium"]
      )

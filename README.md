@@ -132,7 +132,7 @@ Date, Entity Name, Entity Type, Original Search Term
 
 ### License
 
-Copyright (C) 2014 Peita Lin
+Copyright (C) 2014 Peita Lin, Dan Garant
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
