@@ -16,14 +16,15 @@ Requires:
 - Google account
 - PhantomJS + Selenium webdriver if running this program over remote servers. Google sometimes requires mobile authentication when loggin in from new locations/IPs.
 
-######Arch Linux:
-    sudo pacman -S phantomjs
+######OS X:
+    sudo brew install phantomjs
 
 ######Ubuntu:
     sudo apt-get install phantomjs
 
-######OS X:
-    sudo brew install phantomjs
+######Arch Linux:
+    sudo pacman -S phantomjs
+
 
 
 
@@ -77,7 +78,8 @@ Iterates quarterly queries (for daily data) then merges with long term trends da
 
     python3 $base_dir/google_trends/trends.py \
         --username $GMAIL_USER \
-        --password justfortesting! --throttle "random" \
+        --password justfortesting! \
+		--throttle 3 \
         --file $base_dir/input-files/test.txt  \
         --start-date 2013-01 --end-date 2013-6 \
         --category 0-7-107
@@ -86,8 +88,7 @@ Iterates quarterly queries (for daily data) then merges with long term trends da
 
 
 
-### Data Format:
-CSV header:
+__Data Format__:
 Date, Entity Name, Entity Type, Original Search Term
 
 
@@ -132,7 +133,7 @@ Date, Entity Name, Entity Type, Original Search Term
 
 ### License
 
-Copyright (C) 2014 Peita Lin, Dan Garant
+Copyright (C) 2014 P. Lin, D. Garant
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
