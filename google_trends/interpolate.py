@@ -1,6 +1,6 @@
 
 import arrow
-
+from IPython import embed
 
 def interpolate_ioi(date, ioi):
     """ takes a list of dates and interest over time and
@@ -16,7 +16,10 @@ def interpolate_ioi(date, ioi):
             yield start + h * i
 
     def date_range(date):
-        s, e = list(map(arrow.get, [list(date)[0], list(date)[-1]]))
+        if isinstance(date[0], arrow.arrow.Arrow):
+            s, e = list(map(arrow.get, [list(date)[0], list(date)[-1]]))
+        else:
+            s, e = list(map(arrow.get, [list(date)[0][:10], list(date)[-1][-10:]]))
         dates = arrow.Arrow.range('day', s, e)
         return [x.datetime for x in dates]
 
@@ -24,8 +27,11 @@ def interpolate_ioi(date, ioi):
     final_elem = []
     interp = []
     for s,e in zip(date_ioi, date_ioi[1:]):
-        end_date, start_date = list(map(arrow.get, [e[0], s[0]]))
-        # end_ioi, start_ioi = e[1], s[1]
+        try:
+            end_date, start_date = list(map(arrow.get, [e[0], s[0]]))
+        except:
+            end_date, start_date = list(map(arrow.get, [e[0][:10], s[0][:10]]))
+            # [:10] to deal with weekly: '2010-10-10 - 2010-10-16'
         days = (end_date - start_date).days
         interp += list(linspace(s[1], e[1], days+1))[:-1]
         final_elem = e[1]
@@ -101,7 +107,7 @@ def change_in_ioi(date, IoI):
         if relative_effect < 0:
             relative_effect = 0
         # Google Trends appears to scale interest on log base 10
-        # natural log yields highly volatile time series (likely incorrect)
+        # natural log yields highly volatile time series
         delta_IoI.append(1+log10(1+relative_effect))
 
     return date, delta_IoI

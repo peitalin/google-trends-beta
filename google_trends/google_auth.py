@@ -97,6 +97,11 @@ def phone_verify_for_cookies(username, password):
 
     from selenium import webdriver
 
+
+    if username in ['apollonia.verre13@gmail.com', 'lennon.laika13@gmail.com']:
+        password = password + '2' # justfortesting
+
+
     logpath = BASE_DIR + '/phantomjs/{}.log'.format(username)
     driver = webdriver.PhantomJS(service_log_path=logpath)
     login_url = 'https://accounts.google.com/ServiceLogin'
@@ -118,7 +123,9 @@ def phone_verify_for_cookies(username, password):
         print(green("SID and NID cookies success!"))
         return cookies
 
-    else:
+
+    try:    # Mobile Verification
+        print("Couldn't verify by Passwd, trying mobile verification")
         driver.find_element_by_id("submitChallenge").click()
         driver.save_screenshot(BASE_DIR + '/phantomjs/pic_{}.png'.format(username))
         time.sleep(1)
@@ -132,11 +139,13 @@ def phone_verify_for_cookies(username, password):
         cookies = {}
         for cookie in driver.get_cookies():
             cookies[cookie['name']] = cookie['value']
+    except NoSuchElementException:
+        print("Couldn't verify by mobile verification either...")
+
 
     if "NID" in cookies.keys() and "SID" in cookies.keys():
         print(green("SID and NID cookies success!"))
         return cookies
-
     else:
         raise AuthException(red("=> Didn't get the required SID and NID login cookies. Aborting.\n\nAssuming that login details are correct, check that the account is allowed to login from the IP address this script is launched from.\nRemote servers (AWS EC2) will require phone authentication before Google will allow access to the account."))
 
@@ -158,6 +167,7 @@ def phone_verify_for_cookies(username, password):
 
 ### Verification Code form
 # <input class="" id="verify-code-input" autocomplete="off" dir="ltr" maxlength="6" type="text">
+
 
 ##############################################
 

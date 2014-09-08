@@ -174,7 +174,6 @@ def main():
 
 		elif args.cik_file:
 			with open(args.cik_file) as source:
-
 				keywords = [f.strip().split('|') for f in source.readlines()]
 				try:
 					assert all([len(k)==3 for k in keywords])
@@ -531,7 +530,7 @@ def throttle_rate(seconds):
 	if str(seconds).isdigit() and seconds > 0:
 		sleep(float(seconds))
 	elif seconds=="random":
-		sleep(float(random.randint(1,2)))
+		sleep(float(random.randint(2,3)))
 
 
 def YYYY_MM(date_obj):
