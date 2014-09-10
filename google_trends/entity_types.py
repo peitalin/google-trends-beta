@@ -15,7 +15,8 @@ PRIMARY_TYPES = {
     'health care company',
     'private equity company',
     'automaker company',
-    'company'
+    'company',
+    'social network service website',
 }
 
 BACKUP_TYPES = {

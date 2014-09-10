@@ -1,13 +1,30 @@
-# /usr/bin/python3
+#!/usr/bin/python3
+# encoding: utf-8
+
+import os, time
+
+def findProcess(processName):
+    import subprocess
+    ps = subprocess.Popen("ps -ef | grep "+processName,
+        shell=True, stdout=subprocess.PIPE)
+    output = ps.stdout.read().decode('utf-8').split('\n')
+    dropboxd = [x for x in output if 'grep' not in x and x!='']
+    ps.stdout.close()
+    ps.wait()
+    return dropboxd
+
+if not findProcess('dropbox-dist'):
+    ans = input("Start dropbox-dist service? Y/N: ")
+    if ans == 'Y':
+        print("Starting ~/.dropbox-dist/dropboxd process...")
+        os.system("~/.dropbox-dist/dropboxd")
+        time.sleep(4)
+
+# python3 ~/Dropbox/gtrends-beta/gtrends_ioi.py
 
 
-import os
-
-# python ~/Dropbox/gtrends-beta/gtrends_ioi.py
-
-
-cat_codes = ['0-7', '0-7-107', '0-12-784', '0', '0-12']
-categories = ['finance' , 'investing', 'business-news', 'all', 'business_industrial']
+cat_codes = ['0-7', '0', '0-12', '0-7-107', '0-12-784']
+categories = ['finance', 'all', 'business_industrial', 'investing', 'business-news']
 
 # 0-7 -> finance
 # 0-7-107 -> investing
@@ -27,7 +44,6 @@ for ccode, category in categories:
         --username $GMAIL_USER \
         --password justfortesting! \
         --throttle "random" \
-        --quiet-io "true" \
         --cik-file $base_dir/cik-ipo/cik-ipos.csv  \
         --output $base_dir/cik-ipo/{category} \
         --category {ccode}""".format(category=category, ccode=ccode)
@@ -50,7 +66,6 @@ for ccode, category in categories:
 
 
 
-
 ######################################################
 
 """
@@ -58,7 +73,7 @@ for ccode, category in categories:
         --username $GMAIL_USER \
         --password justfortesting! \
         --category 0 \
-        --ipo-quarters "2013-12" \
+        --quarterly "2013-12" \
         --keyword "SolarCity"
 """
 
@@ -67,25 +82,10 @@ for ccode, category in categories:
         --username dgtesting12@gmail.com \
         --password justfortesting! \
         --throttle "random" \
-        --quiet-io "true" \
         --cik-file $base_dir/ipo-uw/ipo-uw.csv  \
         --output $base_dir/ipo-uw2/all \
         --category 0"""
 
 
 
-
-
-
-def selenium_reset_IP():
-    """Emulates browser login with selenium bindings to phantom.js.
-    Gives you SID (Google User ID) cookies."""
-
-    from selenium import webdriver
-
-    driver = webdriver.PhantomJS()
-    # driver = webdriver.Firefox()
-    driver.get('http://10.0.0.138/')
-    driver.find_elements_by_xpath("//td/input")[0].click()
-    driver.find_elements_by_xpath("//td/input")[0].click()
 
