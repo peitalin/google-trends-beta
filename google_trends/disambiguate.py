@@ -47,16 +47,20 @@ def disambiguate_keywords(keyword_generator, session, cookies,
             try:
                 entities = json.loads(entity_data.content.decode('utf-8'))["entityList"]
                 firms = [e for e in entities
-                        if e['type'].lower() in primary_types
-                        or 'company' in e['type']]
+                        if e['type'].lower() in primary_types or 'company' in e['type']]
                 if not firms:
                     firms = [e for e in entities if e['type'].lower() in backup_types]
 
                 # fuzzy string matching to pick best match
                 if firms:
-                    fuzz_scores = list(map(lambda x: fuzz_ratio(keyword, x['title']), firms))
+                    fuzz_scores = [fuzz_ratio(keyword, dic['title']) for dic in firms]
                     if max(fuzz_scores) > 50:
-                        meanings = max(zip(fuzz_scores, firms))[1]
+                        # May potentially have 2 exact matches, e.g. Groupon
+                        # Isolate max scores, then pick 1st entry.
+                        maxfirms = [tup for tup in zip(fuzz_scores, firms)
+                                    if tup[0] == max(fuzz_scores)]
+                        meanings = maxfirms[0][1]
+                        # select dictionary associated to 1st max entry
                     else:
                         meanings = None
                 else:
