@@ -46,10 +46,13 @@ def disambiguate_keywords(keyword_generator, session, cookies,
             entity_data = session.get(url, params={"q": keyword})
             try:
                 entities = json.loads(entity_data.content.decode('utf-8'))["entityList"]
-                firms = [e for e in entities
-                        if e['type'].lower() in primary_types or 'company' in e['type']]
+                firms = [e for e in entities if e['type'].lower() in primary_types]
+
                 if not firms:
                     firms = [e for e in entities if e['type'].lower() in backup_types]
+
+                if not firms:
+                    firms = [e for e in entities if 'company' in e['type'].lower()]
 
                 # fuzzy string matching to pick best match
                 if firms:

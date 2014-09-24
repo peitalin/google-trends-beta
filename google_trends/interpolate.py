@@ -104,8 +104,8 @@ def change_in_ioi(date, IoI):
         f1 = 1 + float(f1)
         f2 = 1 + float(f2)
         relative_effect = log10(f1/f2)
-        if relative_effect < 0:
-            relative_effect = 0
+        # if relative_effect < 0:
+        #     relative_effect = 0
         # Google Trends appears to scale interest on log base 10
         # natural log yields highly volatile time series
         delta_IoI.append(1+log10(1+relative_effect))
@@ -115,39 +115,39 @@ def change_in_ioi(date, IoI):
 
 
 
-def plot_merged_IOI_data():
+# def plot_merged_IOI_data():
 
-    embed()
-    import pandas as pd
-    import matplotlib.pyplot as plt
-    from ggplot import ggplot, geom_line, ggtitle, ggsave, scale_colour_manual, ylab, xlab, aes
 
-    ydat = pd.DataFrame(list(zip(common_date, y_ioi)), columns=["Date", 'Weekly series'])
-    mdat = pd.DataFrame(list(zip(common_date, adj_IoI)), columns=['Date', 'Merged series'])
-    qdat = pd.DataFrame(list(zip(common_date, qdat_interp)), columns=['Date', 'Daily series'])
-    ddat = ydat.merge(mdat, on='Date').merge(qdat,on='Date')
-    ddat['Date'] = list(map(pd.to_datetime, ddat['Date']))
+#     import pandas as pd
+#     import matplotlib.pyplot as plt
+#     from ggplot import ggplot, geom_line, ggtitle, ggsave, scale_colour_manual, ylab, xlab, aes
 
-    ydat['Date'] = list(map(pd.to_datetime, ydat['Date']))
-    mdat['Date'] = list(map(pd.to_datetime, mdat['Date']))
-    qdat['Date'] = list(map(pd.to_datetime, qdat['Date']))
+#     ydat = pd.DataFrame(list(zip(common_date, y_ioi)), columns=["Date", 'Weekly series'])
+#     mdat = pd.DataFrame(list(zip(common_date, adj_IoI)), columns=['Date', 'Merged series'])
+#     qdat = pd.DataFrame(list(zip(common_date, qdat_interp)), columns=['Date', 'Daily series'])
+#     ddat = ydat.merge(mdat, on='Date').merge(qdat,on='Date')
+#     ddat['Date'] = list(map(pd.to_datetime, ddat['Date']))
 
-    newdat = pd.melt(ddat[['Date', 'Merged series', 'Daily series', 'Weekly series']], id_vars='Date')
-    newdat.sort('variable', inplace=True)
+#     ydat['Date'] = list(map(pd.to_datetime, ydat['Date']))
+#     mdat['Date'] = list(map(pd.to_datetime, mdat['Date']))
+#     qdat['Date'] = list(map(pd.to_datetime, qdat['Date']))
 
-    colors = [
-        (0.467, 0.745, 0.88), # blue
-        (0.706, 0.486, 0.78), # purple
-        (0.839, 0.373, 0.373) # red
-    ]
+#     newdat = pd.melt(ddat[['Date', 'Merged series', 'Daily series', 'Weekly series']], id_vars='Date')
+#     newdat.sort('variable', inplace=True)
 
-    show = ggplot(aes(x='Date', y='value', color='variable'), data=newdat) + \
-        geom_line(aes(x='Date', y='Daily series'), data=qdat, alpha=0.5, color=colors[0]) + \
-        geom_line(aes(x='Date', y='Merged series'), data=mdat, alpha=0.9, color=colors[1]) + \
-        geom_line(aes(x='Date', y='Weekly series'), data=ydat, alpha=0.5, color=colors[2], size=1.5) + \
-        geom_line(aes(x='Date', y='value', color='variable'), data=newdat, alpha=0.0) +  scale_colour_manual(values=colors) + \
-        ggtitle("Interest over time for '{}'".format(keywords[0].keyword)) + \
-        ylab("Interest Over Time") + xlab("Date")
+#     colors = [
+#         (0.467, 0.745, 0.88), # blue
+#         (0.706, 0.486, 0.78), # purple
+#         (0.839, 0.373, 0.373) # red
+#     ]
 
-    ggsave(filename='merged_{}'.format(keywords[0].keyword), width=15, height=4)
+#     show = ggplot(aes(x='Date', y='value', color='variable'), data=newdat) + \
+#         geom_line(aes(x='Date', y='Daily series'), data=qdat, alpha=0.5, color=colors[0]) + \
+#         geom_line(aes(x='Date', y='Merged series'), data=mdat, alpha=0.9, color=colors[1]) + \
+#         geom_line(aes(x='Date', y='Weekly series'), data=ydat, alpha=0.5, color=colors[2], size=1.5) + \
+#         geom_line(aes(x='Date', y='value', color='variable'), data=newdat, alpha=0.0) +  scale_colour_manual(values=colors) + \
+#         ggtitle("Interest over time for '{}'".format(keywords[0].keyword)) + \
+#         ylab("Interest Over Time") + xlab("Date")
+
+#     ggsave(filename='merged_{}'.format(keywords[0].keyword), width=15, height=4)
 

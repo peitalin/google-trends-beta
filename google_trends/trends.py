@@ -33,7 +33,7 @@ DEFAULT_TRENDS_URL = "http://www.{domain}/trends/trendsReport"
 INTEREST_OVER_TIME_HEADER = "Interest over time"
 EXPECTED_CONTENT_TYPE = "text/csv; charset=UTF-8"
 NOW = arrow.utcnow()
-
+BASEDIR = os.path.join(os.path.expanduser("~"), "Dropbox", "gtrends")
 
 
 
@@ -60,6 +60,7 @@ def main():
 		'--throttle': "Number of seconds to space out requests, this is to avoid rate limiting.",
 		'--category': "Category for queries, e.g 0-7-107 for finance->investing. See categories.txt",
 		'--quiet-io': "Does not write entity type to csv file.",
+		'--ggplot': "Plots merged data series, requires ggplot"
 	}
 
 
@@ -82,7 +83,8 @@ def main():
 		('--trends-url',    "trends_url",        DEFAULT_TRENDS_URL),
 		('--throttle',      "throttle",          0),
 		('--category',      "category",          None),
-		('--quiet-io',       "quiet_io",         None)
+		('--quiet-io',      "quiet_io",          None),
+		('--ggplot',        "ggplot",            None)
 	)
 
 	parser = argparse.ArgumentParser(prog="trends.py")
@@ -197,7 +199,8 @@ def main():
 								username=args.username,
 								password=args.password,
 								throttle=args.throttle,
-								category=args.category)
+								category=args.category,
+								ggplot=args.ggplot)
 
 	for keyword_data in trend_generator:
 		if args.batch_output_path == "terminal":
@@ -222,6 +225,7 @@ def get_trends(keyword_gen, username=None, password=None,
 			   throttle=0,
 			   quarterly=None,
 			   category=None,
+			   ggplot=None,
 			   trends_url=DEFAULT_TRENDS_URL,
 			   login_url=DEFAULT_LOGIN_URL,
 			   auth_url=DEFAULT_AUTH_URL,
@@ -262,8 +266,8 @@ def get_trends(keyword_gen, username=None, password=None,
 				print('cik:', keyword.cik, '\nfiling date: ', keyword.filing_date)
 
 
-        # from IPython import embed; embed()
-		fn_args = {'keywords': keywords, 'category':category,
+		# from IPython import embed; embed()
+		fn_args = {'keywords': keywords, 'category':category, 'ggplot':ggplot,
 				   'cookies': cookies, 'session': session,
 				   'domain': domain, 'throttle': throttle }
 
@@ -374,7 +378,7 @@ def _check_data(keywords, formatted_data):
 
 
 def quarterly_queries(keywords, category, cookies, session, domain,
-					throttle, filing_date, month_offset=[-6,15],
+					throttle, filing_date, ggplot, month_offset=[-6,18],
 					trends_url=DEFAULT_TRENDS_URL):
 	"""Gets interest data (quarterly) for the 6 months before and 18 months after specified date, then gets interest data for the whole period and merges this data.
 
@@ -404,6 +408,7 @@ def quarterly_queries(keywords, category, cookies, session, domain,
 
 	# Iterate attention queries through each quarter
 	all_data = []
+	num_missing_queries = 1 	# Start on 1, use this to divided IoT later.
 	for start, end in zip(start_range, ended_range):
 		if start > last_week:
 			break
@@ -423,7 +428,9 @@ def quarterly_queries(keywords, category, cookies, session, domain,
 
 		if all([vals==0 for date,vals in query_data]):
 			query_data = [[date, 0] for date in arrow.Arrow.range('month', start, end)]
+			num_missing_queries += 1
 		all_data.append(query_data)
+
 
 
 	# Get overall long-term trend data across entire queried period
@@ -473,15 +480,59 @@ def quarterly_queries(keywords, category, cookies, session, domain,
 
 		# calculate daily %change in IoI and adjust weekly values
 		adj_IoI = [ioi*mult for ioi,mult in zip(y_ioi, delta_ioi)]
+		adj_IoI = [round(x/num_missing_queries, 2) for x in adj_IoI]
 
-		adj_all_data = [[str(date.date()), round(ioi, 2)]
-						for date,ioi in zip(common_date, adj_IoI)]
+		adj_all_data = [[str(date.date()), round(ioi, 2)] for date,ioi in zip(common_date, adj_IoI)]
 	else:
-		adj_all_data = [[str(date.date()), int(zero)]
-			for date, zero in zip(*interpolate_ioi(*zip(*sum(all_data,[]))))]
+		adj_all_data = [[str(date.date()), int(zero)] for date, zero in zip(*interpolate_ioi(*zip(*sum(all_data,[]))))]
+
+
+	adj_all_data = [[x[0], round(x[1]/num_missing_queries,2)] for x in  adj_all_data]
 
 	heading = ["Date", keywords[0].title]
-	return [heading] + adj_all_data
+
+	if not ggplot:
+		return [heading] + adj_all_data
+	else:
+		# GGPLOT MERGED GTRENDS PLOTS:
+		import pandas as pd
+		from ggplot import ggplot, geom_line, ggtitle, ggsave, scale_colour_manual, ylab, xlab, aes
+
+		ydat = pd.DataFrame(list(zip(common_date, y_ioi)), columns=["Date", 'Weekly series'])
+		mdat = pd.DataFrame(list(zip(common_date, adj_IoI)), columns=['Date', 'Merged series'])
+		qdat = pd.DataFrame(list(zip(common_date, qdat_interp)), columns=['Date', 'Daily series'])
+		ddat = ydat.merge(mdat, on='Date').merge(qdat,on='Date')
+		ddat['Date'] = list(map(pd.to_datetime, ddat['Date']))
+
+		ydat['Date'] = list(map(pd.to_datetime, ydat['Date']))
+		mdat['Date'] = list(map(pd.to_datetime, mdat['Date']))
+		qdat['Date'] = list(map(pd.to_datetime, qdat['Date']))
+
+		melt = pd.melt(ddat[['Date','Weekly series','Merged series','Daily series']], id_vars='Date')
+
+		colors = [
+				'#77bde0', # blue
+				'#b47bc6',   # purple
+				'#d55f5f'    # red
+				]
+
+		g = ggplot(aes(x='Date', y='Daily series' ), data=ddat) + \
+			geom_line(aes(x='Date', y='Daily series'), data=qdat, alpha=0.5, color=colors[0]) + \
+			geom_line(aes(x='Date', y='Merged series'), data=mdat, alpha=0.9, color=colors[1]) + \
+			geom_line(aes(x='Date', y='Weekly series'), data=ydat, alpha=0.5, color=colors[2], size=1.5) + \
+			ggtitle("Interest over time for '{}'".format(keywords[0].keyword)) + \
+			ylab("Interest Over Time") + xlab("Date")
+
+		# MISSING LEGEND, GGPLOT peice of crap
+		# g = ggplot(aes(x='Date', y='value', color='variable' ), data=melt) + \
+		# 	geom_line(alpha=0.5) + \
+		# 	scale_colour_manual(values=colors) + \
+		# 	ggtitle("Interest over time for '{}'".format(keywords[0].keyword)) + \
+		# 	ylab("Interest Over Time") + xlab("Date")
+
+		print(g)
+		# ggsave(BASEDIR + "/iot_{}.png".format(keywords[0].keyword), width=15, height=5)
+		return [heading] + adj_all_data
 
 
 
