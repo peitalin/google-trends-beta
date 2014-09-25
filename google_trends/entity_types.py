@@ -25,6 +25,7 @@ PRIMARY_TYPES = {
     'mining company',
     'motion picture company',
     'mobile marketing company',
+    'mobile network operator company',
     'motherboard company',
     'music industry company',
     'natural gas transmission company',
