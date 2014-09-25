@@ -585,7 +585,7 @@ def throttle_rate(seconds):
 	if str(seconds).isdigit() and seconds > 0:
 		sleep(float(seconds))
 	elif seconds=="random":
-		sleep(float(random.randint(2,3)))
+		sleep(float(random.randint(2,4)))
 
 
 def YYYY_MM(date_obj):

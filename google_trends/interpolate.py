@@ -108,7 +108,11 @@ def change_in_ioi(date, IoI):
         #     relative_effect = 0
         # Google Trends appears to scale interest on log base 10
         # natural log yields highly volatile time series
-        delta_IoI.append(1+log10(1+relative_effect))
+        try:
+            delta_IoI.append(1+log10(1+relative_effect))
+        except ValueError:
+            from IPython import embed
+            embed()
 
     return date, delta_IoI
 
