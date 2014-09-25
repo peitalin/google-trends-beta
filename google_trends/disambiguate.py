@@ -57,7 +57,7 @@ def disambiguate_keywords(keyword_generator, session, cookies,
                 # fuzzy string matching to pick best match
                 if firms:
                     fuzz_scores = [fuzz_ratio(keyword, dic['title']) for dic in firms]
-                    if max(fuzz_scores) > 50:
+                    if max(fuzz_scores) > 40:
                         # May potentially have 2 exact matches, e.g. Groupon
                         # Isolate max scores, then pick 1st entry.
                         maxfirms = [tup for tup in zip(fuzz_scores, firms)

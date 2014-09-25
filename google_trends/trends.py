@@ -297,7 +297,11 @@ def get_trends(keyword_gen, username=None, password=None,
 
 def _query_parameters(start_date, end_date, keywords, category):
 	"Formats query parameters into a dictionary and passes to session.get()"
-	months = int(max((end_date - start_date).days, 30) / 30) # Number of months back
+
+	days_in_month = 30 if start_date.month != 2 else 28
+	# February bugfix, rounds number of months down by 1
+	months = int(max((end_date - start_date).days, days_in_month)/days_in_month)
+	# Sets number of months back for query
 	params = {"export": 1, "content": 1}
 	params["date"] = "{0} {1}m".format(start_date.strftime("%m/%Y"), months)
 	# combine topics into a joint query -> q: query
