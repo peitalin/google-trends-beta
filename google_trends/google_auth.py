@@ -44,6 +44,10 @@ def authenticate_with_google(username, password, login_url=DEFAULT_LOGIN_URL, au
     gaps = login_response.cookies["GAPS"]
     domain = urlparse(login_response.url).netloc.replace("accounts.", "")
 
+
+    if username in ['dgtesting12@gmail.com', 'apollonia.verre13@gmail.com', 'lennon.laika13@gmail.com']:
+        password = password + '2' # justfortesting
+
     # now post to the auth service with this cookie and the creds
     post_data = {"Email": username, "Passwd": password,
                  "PersistentCookie": "yes", "GALX": galx,
@@ -98,7 +102,7 @@ def phone_verify_for_cookies(username, password):
     from selenium import webdriver
 
 
-    if username in ['apollonia.verre13@gmail.com', 'lennon.laika13@gmail.com']:
+    if username in ['dgtesting12@gmail.com', 'apollonia.verre13@gmail.com', 'lennon.laika13@gmail.com']:
         password = password + '2' # justfortesting
 
 
@@ -129,6 +133,7 @@ def phone_verify_for_cookies(username, password):
         driver.find_element_by_id("submitChallenge").click()
         driver.save_screenshot(BASE_DIR + '/phantomjs/pic_{}.png'.format(username))
         time.sleep(1)
+
         code = input(cyan("Enter Google mobile verification code: "))
         while len(code) != 6:
             code = input(red("Re-enter Google [6-digit] verification code: "))
@@ -139,7 +144,7 @@ def phone_verify_for_cookies(username, password):
         cookies = {}
         for cookie in driver.get_cookies():
             cookies[cookie['name']] = cookie['value']
-    except NoSuchElementException:
+    except:
         print("Couldn't verify by mobile verification either...")
 
 

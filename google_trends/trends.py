@@ -412,7 +412,7 @@ def quarterly_queries(keywords, category, cookies, session, domain,
 
 	# Iterate attention queries through each quarter
 	all_data = []
-	num_missing_queries = 1 	# Start on 1, use this to divided IoT later.
+	num_missing_queries = 1 	# Start on 1, use this to divide IoT later.
 	for start, end in zip(start_range, ended_range):
 		if start > last_week:
 			break
@@ -434,7 +434,7 @@ def quarterly_queries(keywords, category, cookies, session, domain,
 			query_data = [[date, 0] for date in arrow.Arrow.range('month', start, end)]
 			num_missing_queries += 1
 		all_data.append(query_data)
-
+	num_missing_queries = min((num_missing_queries, 10))
 
 
 	# Get overall long-term trend data across entire queried period
@@ -501,18 +501,20 @@ def quarterly_queries(keywords, category, cookies, session, domain,
 		# GGPLOT MERGED GTRENDS PLOTS:
 		import pandas as pd
 		from ggplot import ggplot, geom_line, ggtitle, ggsave, scale_colour_manual, ylab, xlab, aes
+		try:
+			ydat = pd.DataFrame(list(zip(common_date, y_ioi)), columns=["Date", 'Weekly series'])
+			mdat = pd.DataFrame(list(zip(common_date, adj_IoI)), columns=['Date', 'Merged series'])
+			qdat = pd.DataFrame(list(zip(common_date, qdat_interp)), columns=['Date', 'Daily series'])
+			ddat = ydat.merge(mdat, on='Date').merge(qdat,on='Date')
+			ddat['Date'] = list(map(pd.to_datetime, ddat['Date']))
 
-		ydat = pd.DataFrame(list(zip(common_date, y_ioi)), columns=["Date", 'Weekly series'])
-		mdat = pd.DataFrame(list(zip(common_date, adj_IoI)), columns=['Date', 'Merged series'])
-		qdat = pd.DataFrame(list(zip(common_date, qdat_interp)), columns=['Date', 'Daily series'])
-		ddat = ydat.merge(mdat, on='Date').merge(qdat,on='Date')
-		ddat['Date'] = list(map(pd.to_datetime, ddat['Date']))
+			ydat['Date'] = list(map(pd.to_datetime, ydat['Date']))
+			mdat['Date'] = list(map(pd.to_datetime, mdat['Date']))
+			qdat['Date'] = list(map(pd.to_datetime, qdat['Date']))
+		except UnboundLocalError as e:
+			raise(UnboundLocalError("No Interest-over-time to plot"))
 
-		ydat['Date'] = list(map(pd.to_datetime, ydat['Date']))
-		mdat['Date'] = list(map(pd.to_datetime, mdat['Date']))
-		qdat['Date'] = list(map(pd.to_datetime, qdat['Date']))
-
-		melt = pd.melt(ddat[['Date','Weekly series','Merged series','Daily series']], id_vars='Date')
+		# melt = pd.melt(ddat[['Date','Weekly series','Merged series','Daily series']], id_vars='Date')
 
 		colors = [
 				'#77bde0', # blue
@@ -520,12 +522,17 @@ def quarterly_queries(keywords, category, cookies, session, domain,
 				'#d55f5f'    # red
 				]
 
+		entity_type = keywords[0].desc
+
 		g = ggplot(aes(x='Date', y='Daily series' ), data=ddat) + \
 			geom_line(aes(x='Date', y='Daily series'), data=qdat, alpha=0.5, color=colors[0]) + \
 			geom_line(aes(x='Date', y='Merged series'), data=mdat, alpha=0.9, color=colors[1]) + \
 			geom_line(aes(x='Date', y='Weekly series'), data=ydat, alpha=0.5, color=colors[2], size=1.5) + \
-			ggtitle("Interest over time for '{}'".format(keywords[0].keyword)) + \
+			ggtitle("Interest over time for '{}' ({})".format(keywords[0].keyword, entity_type)) + \
 			ylab("Interest Over Time") + xlab("Date")
+
+		# from IPython import embed
+		# embed()
 
 		# MISSING LEGEND, GGPLOT peice of crap
 		# g = ggplot(aes(x='Date', y='value', color='variable' ), data=melt) + \
