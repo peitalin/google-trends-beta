@@ -466,7 +466,10 @@ def quarterly_queries(keywords, category, cookies, session, domain,
 			if quarter_data != []:
 				quarter_data = [x for x in quarter_data if x[1] != '']
 				all_ioi_delta += list(zip(*change_in_ioi(*zip(*quarter_data))))
-				qdat_interp += interpolate_ioi(*zip(*quarter_data))[1]
+
+				if ggplot:
+					qdat_interp += interpolate_ioi(*zip(*quarter_data))[1]
+					# for plotting only
 
 		qdate = [date for date, delta_ioi in all_ioi_delta]
 		delta_ioi = [delta_ioi for date, delta_ioi in all_ioi_delta]
@@ -490,13 +493,13 @@ def quarterly_queries(keywords, category, cookies, session, domain,
 	else:
 		adj_all_data = [[str(date.date()), int(zero)] for date, zero in zip(*interpolate_ioi(*zip(*sum(all_data,[]))))]
 
-
+	# from IPython import embed; embed()
 	adj_all_data = [[x[0], round(x[1]/num_missing_queries,2)] for x in  adj_all_data]
-
 	heading = ["Date", keywords[0].title]
 
 	if not ggplot:
 		return [heading] + adj_all_data
+
 	else:
 		# GGPLOT MERGED GTRENDS PLOTS:
 		import pandas as pd
@@ -514,7 +517,8 @@ def quarterly_queries(keywords, category, cookies, session, domain,
 		except UnboundLocalError as e:
 			raise(UnboundLocalError("No Interest-over-time to plot"))
 
-		# melt = pd.melt(ddat[['Date','Weekly series','Merged series','Daily series']], id_vars='Date')
+		# meltkeys = ['Date','Weekly series','Merged series','Daily series']
+		# melt = pd.melt(ddat[meltkeys], id_vars='Date')
 
 		colors = [
 				'#77bde0', # blue
@@ -592,7 +596,7 @@ def throttle_rate(seconds):
 	if str(seconds).isdigit() and seconds > 0:
 		sleep(float(seconds))
 	elif seconds=="random":
-		sleep(float(random.randint(2,4)))
+		sleep(float(random.randint(2,3)))
 
 
 def YYYY_MM(date_obj):

@@ -25,6 +25,7 @@ PRIMARY_TYPES = {
     'electronics company',
     'financial services company',
     'finance company',
+    'game developer',
     'health care company',
     'healthcare company',
     'investment',

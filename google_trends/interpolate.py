@@ -2,9 +2,12 @@
 import arrow
 from IPython import embed
 
-def interpolate_ioi(date, ioi):
-    """ takes a list of dates and interest over time and
-    interpolates the dates. Called by change_in_ioi()"""
+
+
+
+def interpolate_ioi(dates, IoT):
+    """ takes a list of dates and interest-over-time and
+    interpolates IoT between the dates. Called by change_in_ioi()"""
 
     def linspace(start, stop, n):
         start, stop = float(start), float(stop)
@@ -15,33 +18,45 @@ def interpolate_ioi(date, ioi):
         for i in range(n):
             yield start + h * i
 
-    def date_range(date):
-        if isinstance(date[0], arrow.arrow.Arrow):
-            s, e = list(map(arrow.get, [list(date)[0], list(date)[-1]]))
+    def date_range(dates):
+        if isinstance(dates[0], str):
+            s = arrow.get(dates[0][:10])
+            e = arrow.get(dates[-1][-10:])
         else:
-            s, e = list(map(arrow.get, [list(date)[0][:10], list(date)[-1][-10:]]))
-        dates = arrow.Arrow.range('day', s, e)
-        return [x.datetime for x in dates]
+            s, e = dates[0], dates[-1]
+        return [x.datetime for x in arrow.Arrow.range('day', s, e)]
 
-    date_ioi = list(zip(date, ioi))
+    # embed()
+    dates_ioi = list(zip(dates, IoT))
     final_elem = []
     interp = []
-    for s,e in zip(date_ioi, date_ioi[1:]):
-        try:
-            end_date, start_date = list(map(arrow.get, [e[0], s[0]]))
-        except:
-            end_date, start_date = list(map(arrow.get, [e[0][:10], s[0][:10]]))
-            # [:10] to deal with weekly: '2010-10-10 - 2010-10-16'
+    count = 1
+    for s, e in zip(dates_ioi, dates_ioi[1:]):
+
+        if isinstance(s[0], str):
+            # weekly IoT data gotcha:
+            # last weekly obs e.g. '2010-10-10 - 2010-10-16' will be truncated
+            if count == len(dates_ioi) - 1: # If final weekly observation
+                start_date = arrow.get(s[0][:10])
+                end_date   = arrow.get(e[0][-10:])
+                # [:10] to deal with weekly: '2010-10-10 - 2010-10-16'
+                # [-10:] to get last day of last week
+            else:
+                start_date = arrow.get(s[0][:10])
+                end_date   = arrow.get(e[0][:10])
+
+        elif isinstance(s[0], arrow.Arrow):
+            start_date, end_date = s[0], e[0]
+
         days = (end_date - start_date).days
         interp += list(linspace(s[1], e[1], days+1))[:-1]
         final_elem = e[1]
+        count += 1
 
     if final_elem:
         interp += [float(final_elem)]
 
-    date = date_range(date)
-    return date, interp
-
+    return date_range(dates), interp
 
 
 
@@ -78,7 +93,7 @@ def conform_interest_over_time(IoI):
         new_IoI += [t1]
 
     def average(list_ioi):
-        return sum([float(s) for s in list_ioi])/len(list_ioi)
+        return sum(float(s) for s in list_ioi) / len(list_ioi)
 
     avg = round(average(IoI))
     new_IoI = [avg if x==0 else x for x in new_IoI]
@@ -89,21 +104,23 @@ def conform_interest_over_time(IoI):
 
 
 
-def change_in_ioi(date, IoI):
-    """Computes changes in interest over time (IoI) (log base 10).
-    date -- list of dates
-    IoI  -- list of IoI values
-    Returns a list of dates, and list of changes in IoI values. """
+def change_in_ioi(dates, IoT):
+    """Computes changes in interest over time (IoT) (log base 10).
+
+    dates -- list of dates
+    IoT   -- list of IoT values
+    Returns a list of dates, and list of changes in IoT values. """
 
     from math import log10, log
-    date, IoI = interpolate_ioi(date, IoI)
-    IoI = conform_interest_over_time(IoI)
-    delta_IoI = [1]
 
-    for f1,f2 in zip(IoI, IoI[1:]):
+    dates, IoT = interpolate_ioi(dates, IoT)
+    IoT = conform_interest_over_time(IoT)
+    delta_IoT = [1]
+
+    for f1,f2 in zip(IoT, IoT[1:]):
         f1 = 1 + float(f1)
         f2 = 1 + float(f2)
-        relative_effect = log10(f1/f2)
+        relative_effect = log10(f2/f1)
         # if relative_effect < 0:
         #     relative_effect = 0
         # Google Trends appears to scale interest on log base 10
@@ -112,13 +129,12 @@ def change_in_ioi(date, IoI):
             relative_effect = -0.9
             # log10(0.1) = 0, meaning zero interest
         try:
-            delta_IoI.append(1+log10(1+relative_effect))
+            delta_IoT.append(1+log10(1+relative_effect))
         except ValueError:
             from IPython import embed
             embed()
 
-
-    return date, delta_IoI
+    return dates, delta_IoT
 
 
 
