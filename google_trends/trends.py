@@ -491,6 +491,7 @@ def quarterly_queries(keywords, category, cookies, session, domain,
 
 		adj_all_data = [[str(date.date()), round(ioi, 2)] for date,ioi in zip(common_date, adj_IoI)]
 	else:
+		# from IPython import embed; embed()
 		adj_all_data = [[str(date.date()), int(zero)] for date, zero in zip(*interpolate_ioi(*zip(*sum(all_data,[]))))]
 
 	# from IPython import embed; embed()

@@ -31,9 +31,24 @@ def interpolate_ioi(dates, IoT):
     final_elem = []
     interp = []
     count = 1
-    for s, e in zip(dates_ioi, dates_ioi[1:]):
 
-        if isinstance(s[0], str):
+    for s, e in zip(dates_ioi, dates_ioi[1:]):
+        s = list(s)
+        e = list(e)
+
+        if isinstance(s[0], arrow.Arrow) and isinstance(e[0], str):
+            s[0] = s[0].strftime('%Y-%m-%d')
+            # Bad data: when google returns mix of weekly and monthly data:
+            # (<Arrow [2013-10-01T00:00:00+00:00]>, 0),
+            # ('2013-10-06 - 2013-10-12', '100'),
+
+        if isinstance(s[0], str) and isinstance(e[0], arrow.Arrow):
+            e[0] = e[0].strftime('%Y-%m-%d')
+            # Bad data: Dealing with entries like:
+            #  ('2014-06-29 - 2014-07-05', '0'),
+            #  (<Arrow [2014-07-01T00:00:00+00:00]>, 0),
+
+        if isinstance(s[0], str) and isinstance(e[0], str):
             # weekly IoT data gotcha:
             # last weekly obs e.g. '2010-10-10 - 2010-10-16' will be truncated
             if count == len(dates_ioi) - 1: # If final weekly observation
