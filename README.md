@@ -8,6 +8,10 @@ The program inputs the original search term and disambiguates between various
 entity types, then returns the correct company/corporate type matched by phrase similarity. In case there are multiple company types (e.g. Wachovia Securities, Wachovia Group). Default entity types are firms and investment banks.
 **Python 2 not supported.
 
+![alt tag](https://raw.githubusercontent.com/peitalin/gtrends-beta/master/input-files/iot_gif.gif)
+
+
+
 
 ### INSTRUCTIONS:
 pip install -r requirements.txt
@@ -59,6 +63,14 @@ To get different entity types, define entity types in __entity_types.py__. Curre
         --category 0-7
 
 
+    python3 $base_dir/google_trends/trends.py \
+        --username $GMAIL_USER \
+        --password justfortesting! \
+        --quarterly "2014-05" \
+        --keyword "Alibaba" \
+        --category 0-12
+
+
 ##### Quarterly queries -6 +18 months around a date.
 
     python3 $base_dir/google_trends/trends.py \
@@ -68,28 +80,9 @@ To get different entity types, define entity types in __entity_types.py__. Curre
         --keyword "Facebook" \
         --category 0-7
 
-    python3 $base_dir/google_trends/trends.py \
-        --username $GMAIL_USER \
-        --password justfortesting! \
-        --quarterly "2014-05" \
-        --keyword "Alibaba"
-
-
-
 Iterates quarterly queries (for daily data) then merges with long term trends data through interpolation (log10 changes in daily interest).
 
 ![alt tag](https://raw.githubusercontent.com/peitalin/gtrends-beta/master/input-files/merged_Facebook2.png)
-
-
-#####Batch input from a text file
-
-    python3 $base_dir/google_trends/trends.py \
-        --username $GMAIL_USER \
-        --password justfortesting! \
-		--throttle 3 \
-        --file $base_dir/input-files/test.txt  \
-        --start-date 2013-01 --end-date 2013-6 \
-        --category 0-7-107
 
 
 
