@@ -60,7 +60,11 @@ To get different entity types, define entity types in __entity_types.py__. Curre
 
 
 
+<<<<<<< HEAD
 ##### Quarterly queries -6 +18 months around a date.
+=======
+##### Quarterly queries -6 +24 months around a date.
+>>>>>>> cbb54418f3e864e560b97e001f95061ffbb3a12b
 
     python3 $base_dir/google_trends/trends.py \
         --username $GMAIL_USER \
@@ -68,6 +72,7 @@ To get different entity types, define entity types in __entity_types.py__. Curre
         --quarterly "2012-05" \
         --keyword "Facebook"
 
+<<<<<<< HEAD
     python3 $base_dir/google_trends/trends.py \
         --username $GMAIL_USER \
         --password justfortesting! \
@@ -77,6 +82,8 @@ To get different entity types, define entity types in __entity_types.py__. Curre
 
 
 
+=======
+>>>>>>> cbb54418f3e864e560b97e001f95061ffbb3a12b
 
 Iterates quarterly queries (for daily data) then merges with long term trends data through interpolation (log10 changes in daily interest).
 

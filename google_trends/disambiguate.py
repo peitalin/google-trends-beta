@@ -52,6 +52,7 @@ def disambiguate_keywords(keyword_generator, session, cookies,
 
                 # from IPython import embed
                 # embed()
+<<<<<<< HEAD
                 new_etypes = [e['type'] for e in entities]
                 if new_etypes:
                     with open("input-files/entity_list.txt", "r") as f:
@@ -62,6 +63,8 @@ def disambiguate_keywords(keyword_generator, session, cookies,
                         with open("input-files/entity_list.txt", "w") as f:
                             f.write('\n'.join(etypes))
 
+=======
+>>>>>>> cbb54418f3e864e560b97e001f95061ffbb3a12b
 
                 if not firms:
                     firms = [e for e in entities if e['type'].lower() in backup_types]

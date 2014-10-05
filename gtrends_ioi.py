@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # encoding: utf-8
 
+<<<<<<< HEAD
 
 
 import os, time
@@ -14,12 +15,25 @@ def findProcess(processName):
     output = ps.stdout.read().decode('utf-8').split('\n')
     dropboxd = [x for x in output if 'grep' not in x and x!='']
     ps.stdout.close()
+=======
+import os, time
+
+def findProcess(processName):
+    import subprocess
+    ps = subprocess.Popen("ps -ef | grep "+processName,
+        shell=True, stdout=subprocess.PIPE)
+    output = ps.stdout.read().decode('utf-8').split('\n')
+    dropboxd = [x for x in output if 'grep' not in x and x!='']
+    ps.stdout.close()
+    ps.wait()
+>>>>>>> cbb54418f3e864e560b97e001f95061ffbb3a12b
     return dropboxd
 
 if not findProcess('dropbox-dist'):
     ans = input("Start dropbox-dist service? Y/N: ")
     if ans == 'Y':
         print("Starting ~/.dropbox-dist/dropboxd process...")
+<<<<<<< HEAD
         stdout = os.system("~/.dropbox-dist/dropboxd &")
         time.sleep(2)
 
@@ -31,6 +45,16 @@ if not findProcess('dropbox-dist'):
 
 cat_codes = ['0', '0-7',  '0-12', '0-7-107', '0-12-784']
 categories = ['all', 'finance', 'business_industrial', 'investing', 'business-news']
+=======
+        os.system("~/.dropbox-dist/dropboxd")
+        time.sleep(4)
+
+# python3 ~/Dropbox/gtrends-beta/gtrends_ioi.py
+
+
+cat_codes = ['0-7', '0', '0-12', '0-7-107', '0-12-784']
+categories = ['finance', 'all', 'business_industrial', 'investing', 'business-news']
+>>>>>>> cbb54418f3e864e560b97e001f95061ffbb3a12b
 
 # 0-7 -> finance
 # 0-7-107 -> investing
@@ -40,13 +64,20 @@ categories = ['all', 'finance', 'business_industrial', 'investing', 'business-ne
 # 0-12-1138-1139 -> investment-banking
 # 0-12: Business & Industrial
 
+<<<<<<< HEAD
 # categories = shuffle(list(zip(cat_codes, categories)))
+=======
+
+>>>>>>> cbb54418f3e864e560b97e001f95061ffbb3a12b
 categories = list(zip(cat_codes, categories))
 
 
 for ccode, category in categories:
     # Firms names
+<<<<<<< HEAD
     print("Getting trends for category: {}".format(category))
+=======
+>>>>>>> cbb54418f3e864e560b97e001f95061ffbb3a12b
     syscall = """python3 $base_dir/google_trends/trends.py \
         --username $GMAIL_USER \
         --password justfortesting! \
@@ -55,7 +86,10 @@ for ccode, category in categories:
         --output $base_dir/cik-ipo/{category} \
         --category {ccode}""".format(category=category, ccode=ccode)
     os.system(syscall)
+<<<<<<< HEAD
     time.sleep(1)
+=======
+>>>>>>> cbb54418f3e864e560b97e001f95061ffbb3a12b
 
 
 
