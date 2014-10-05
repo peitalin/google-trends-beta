@@ -63,15 +63,8 @@ To get different entity types, define entity types in __entity_types.py__. Curre
         --category 0-7
 
 
-    python3 $base_dir/google_trends/trends.py \
-        --username $GMAIL_USER \
-        --password justfortesting! \
-        --quarterly "2014-05" \
-        --keyword "Alibaba" \
-        --category 0-12
 
-
-##### Quarterly queries -6 +18 months around a date.
+##### Merged daily + monthly series
 
     python3 $base_dir/google_trends/trends.py \
         --username $GMAIL_USER \
@@ -80,11 +73,20 @@ To get different entity types, define entity types in __entity_types.py__. Curre
         --keyword "Facebook" \
         --category 0-7
 
-Iterates quarterly queries (for daily data) then merges with long term trends data through interpolation (log10 changes in daily interest).
 
 ![alt tag](https://raw.githubusercontent.com/peitalin/gtrends-beta/master/input-files/merged_Facebook2.png)
 
+This iterates quarterly queries (for daily data) then merges with long term trends data through interpolation (log10 changes in daily interest).
 
+
+##### Quarterly queries -6 +18 months around a date.
+
+    python3 $base_dir/google_trends/trends.py \
+        --username $GMAIL_USER \
+        --password justfortesting! \
+        --quarterly "2014-05" \
+        --keyword "Alibaba" \
+        --category 0-12
 
 
 
