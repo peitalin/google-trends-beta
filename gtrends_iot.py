@@ -26,8 +26,9 @@ if not findProcess('dropbox-dist'):
 
 # ps -ef | grep dropbox
 # ~/.dropbox-dist/dropboxd &
-# python3 ~/Dropbox/gtrends-beta/gtrends_ioi.py
-
+# python3 ~/Dropbox/gtrends-beta/gtrends_iot.py
+# ~/.dropbox-dist/dropboxd & ps -ef | grep dropbox & python3 $base_dir/gtrends_iot.py
+#
 
 cat_codes = ['0', '0-7',  '0-12', '0-7-107', '0-12-784']
 categories = ['all', 'finance', 'business_industrial', 'investing', 'business-news']

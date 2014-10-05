@@ -49,12 +49,12 @@ This query returns "Tesla Motors" queries rather than "Nikola Tesla" or "tesla c
 To get different entity types, define entity types in __entity_types.py__. Currently filters for companies and investment banking firms.
 
 
-#####Category filters: BofA Merrill Lynch -> Category 0-7 (Finance)
+#####Category filters: JP Morgan -> Category 0-7 (Finance)
 
     python3 $base_dir/google_trends/trends.py \
         --username $GMAIL_USER \
         --password justfortesting! \
-        --keyword "BofA Merrill Lynch" \
+        --keyword "JP Morgan" \
         --throttle "random" \
         --category 0-7
 
@@ -65,14 +65,15 @@ To get different entity types, define entity types in __entity_types.py__. Curre
         --username $GMAIL_USER \
         --password justfortesting! \
         --quarterly "2012-05" \
-        --keyword "Facebook"
+        --keyword "Facebook" \
+        --category 0-7
 
     python3 $base_dir/google_trends/trends.py \
         --username $GMAIL_USER \
         --password justfortesting! \
-        --quarterly "2013-05" \
-        --keyword "Alibaba" \
-        --category 0-7
+        --quarterly "2014-05" \
+        --keyword "Alibaba"
+
 
 
 Iterates quarterly queries (for daily data) then merges with long term trends data through interpolation (log10 changes in daily interest).

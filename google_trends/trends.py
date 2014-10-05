@@ -553,7 +553,7 @@ def quarterly_queries(keywords, category, cookies, session, domain,
 
 
 def single_query(keywords, category, cookies, session, domain, throttle,
-			start_date, end_date, trends_url=DEFAULT_TRENDS_URL):
+			start_date, end_date, trends_url=DEFAULT_TRENDS_URL, ggplot=False):
 	"Single period queries"
 
 	try:
@@ -588,7 +588,9 @@ def parse_ioi_row(row):
 		representing a date and associated counts for that date
 	"""
 	date, *counts = row
-	date = arrow.get(date[:10]).date() # len>10 => date range (not yyyy-mm-dd format)
+	if isinstance(date, str):
+		date = arrow.get(date[:10]).date() # len>10 => date range (not yyyy-mm-dd format)
+		date = date.strftime('%Y-%m-%d')
 	return (date, counts)
 
 

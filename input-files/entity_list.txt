@@ -1,1 +1,128 @@
-Airline
+Advertising company
+Aerospace company
+Airline company
+All Other Miscellaneous Manufacturing Business
+Apparel company
+Automaker company
+Automotive industry company
+Bank
+Banking company
+Beverages company
+Biotechnology company
+Brand
+Broadcasting company
+Business Operation
+Business process outsourcing company
+Cable television company
+Car rental company
+Chemical Manufacturing company
+Clothing company
+Cloud computing company
+Coffee company
+Commercial company
+Company
+Computer data storage company
+Computer networking company
+Computer-aided engineering company
+Corporation
+Coupon company
+Crude Petroleum and Natural Gas Extraction Business
+Data visualization company
+Defense contractor Business
+Department store company
+Education company
+Electronics company
+Energy company
+Engineering company
+Entertainment company
+Fashion designer
+Fast food restaurant company
+Finance service company
+Financial Services company
+Food company
+Furniture Stores company
+Grocery store company
+Healthcare company
+Hedge fund company
+Hospitality company
+Hotel company
+IT security company
+Ice Manufacturing company
+Information technology company
+Insurance company
+Internet company
+Internet services company
+Investment banking company
+Investment management company
+Investment service company
+Logistics company
+Management Consulting Services company
+Manufacturing company
+Media company
+Mining company
+Mobile marketing company
+Mobile network provider company
+Motherboard company
+Motion Picture company
+Movie theater company
+Music company
+Natural Gas Transmission company
+Network security company
+Online advertising company
+Online food ordering company
+Organization
+Organization leader
+Paper company
+Personal computer equipment company
+Pet insurance company
+Petroleum Refineries company
+Petroleum industry Business
+Pharmaceutical Preparations Business
+Pharmaceutical company
+Photonics company
+Printing company
+Private equity company
+Property and Casualty Insurance company
+Public company
+Publishing company
+Radio Broadcasting Stations company
+Radio Networks company
+Real Estate company
+Restaurant
+Restaurant company
+Retail company
+Risk management company
+Search term
+Seed company
+Semiconductor company
+Semiconductor manufacturing company
+Shoe manufacturing company
+Social network service Website
+Software
+Software Engineering company
+Software as a service company
+Software company
+Software development company
+Solar energy company
+Stem Cell Research company
+Supermarket company
+Tea company
+Technology company
+Telecommunications company
+Television company
+The Internet company
+Underwear company
+Variety Stores company
+Venture Funded Company
+Video Game Developer
+Video game company
+Visual Effects company
+Voice over IP company
+Website
+Wi-Fi company
+__NEW_ENTITIES__
+Venture Investor
+Person
+Private equity Business
+Other Communications Equipment Manufacturing Business
+Other Communications Equipment Manufacturing company

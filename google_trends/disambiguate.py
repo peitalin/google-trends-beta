@@ -52,6 +52,9 @@ def disambiguate_keywords(keyword_generator, session, cookies,
 
                 # from IPython import embed
                 # embed()
+                # import os
+                # print(os.getcwd())
+
                 new_etypes = [e['type'] for e in entities]
                 if new_etypes:
                     with open("input-files/entity_list.txt", "r") as f:
