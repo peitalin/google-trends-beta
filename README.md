@@ -59,7 +59,7 @@ To get different entity types, define entity types in __entity_types.py__. Curre
         --category 0-7
 
 
-##### Quarterly queries -6 +24 months around a date.
+##### Quarterly queries -6 +18 months around a date.
 
     python3 $base_dir/google_trends/trends.py \
         --username $GMAIL_USER \
