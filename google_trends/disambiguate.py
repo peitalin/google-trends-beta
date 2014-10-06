@@ -55,16 +55,16 @@ def disambiguate_keywords(keyword_generator, session, cookies,
                 # from IPython import embed
                 # embed()
 
-                new_etypes = [e['type'] for e in entities]
-                if new_etypes:
-                    basedir = os.path.join(*os.path.abspath(__file__).split('/')[:-1])
-                    entity_dir = os.path.join(basedir, 'input-files', 'entity_list.txt')
-                    with open(entity_dir, "r+") as f:
-                        etypes = f.read().split('\n')
-                    if set(new_etypes) - set(etypes):
-                        etypes += list(set(new_etypes) - set(etypes))
-                        with open(entity_dir, "w") as f:
-                            f.write('\n'.join(etypes))
+                # new_etypes = [e['type'] for e in entities]
+                # if new_etypes:
+                #     basedir = os.path.join(*os.path.abspath(__file__).split('/')[:-2])
+                #     entity_dir = os.path.join(basedir, 'input-files', 'entity_list.txt')
+                #     with open(entity_dir, "r+") as f:
+                #         etypes = f.read().split('\n')
+                #     if set(new_etypes) - set(etypes):
+                #         etypes += list(set(new_etypes) - set(etypes))
+                #         with open(entity_dir, "w") as f:
+                #             f.write('\n'.join(etypes))
 
                 if not firms:
                     firms = [e for e in entities if e['type'].lower() in backup_types]
