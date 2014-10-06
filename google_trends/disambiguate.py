@@ -2,10 +2,12 @@
 # encoding: utf-8
 
 
-from google_class import KeywordData, QuotaException
-import json, re, sys, string, unicodedata
+import os, sys, re, json
+import unicodedata
 import arrow
+
 from difflib import SequenceMatcher
+from google_class import KeywordData, QuotaException
 
 PY3 = sys.version_info[0] == 3
 ENTITY_QUERY_URL = "http://www.google.com/trends/entitiesQuery"
@@ -52,16 +54,16 @@ def disambiguate_keywords(keyword_generator, session, cookies,
 
                 # from IPython import embed
                 # embed()
-                # import os
-                # print(os.getcwd())
 
                 new_etypes = [e['type'] for e in entities]
                 if new_etypes:
-                    with open("input-files/entity_list.txt", "r") as f:
+                    basedir = os.path.join(*os.path.abspath(__file__).split('/')[:-1])
+                    entity_dir = os.path.join(basedir, 'input-files', 'entity_list.txt')
+                    with open(entity_dir, "r+") as f:
                         etypes = f.read().split('\n')
                     if set(new_etypes) - set(etypes):
                         etypes += list(set(new_etypes) - set(etypes))
-                        with open("input-files/entity_list.txt", "w") as f:
+                        with open(entity_dir, "w") as f:
                             f.write('\n'.join(etypes))
 
                 if not firms:

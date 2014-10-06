@@ -323,16 +323,16 @@ def _get_response(url, params, cookies, session):
 		else:
 			return list(response.iter_lines())
 
-	elif response.headers["content-type"] == 'text/html; charset=UTF-8':
+	elif 'text/html' in response.headers["content-type"]:
 		if "quota" in response.text.strip().lower():
 			raise QuotaException("\n\nThe request quota has been reached. " +
 					"This may be either the daily quota (~500 queries?) or the rate limiting quota. " +
 					"Try adding the --throttle argument to avoid rate limiting problems.")
 
 		elif "currently unavailable" in response.text.strip().lower():
-			print(response.text.strip().lower())
+			print('\n', response.text.strip())
 			print("\nNo interest for this category--'currently unavailable' " +
-				"\ncontent type: {}... returning 0\n\n".format(
+				"\n==> content type: {}... returning 0\n\n".format(
 					response.headers["content-type"]))
 
 			qdate = params["date"].split(' ')[0]
@@ -345,6 +345,9 @@ def _get_response(url, params, cookies, session):
 			raise FormatException(("\n\nUnexpected content type {0}. " +
 				"Maybe an invalid category or date was supplied".format(
 					response.headers["content-type"])))
+	else:
+		from IPython import embed
+		embed()
 
 
 def _process_response(response_data):
@@ -590,7 +593,7 @@ def parse_ioi_row(row):
 	date, *counts = row
 	if isinstance(date, str):
 		date = arrow.get(date[:10]).date() # len>10 => date range (not yyyy-mm-dd format)
-		date = date.strftime('%Y-%m-%d')
+		# date = date.strftime('%Y-%m-%d')
 	return (date, counts)
 
 
