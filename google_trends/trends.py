@@ -385,9 +385,9 @@ def _check_data(keywords, formatted_data):
 
 
 def quarterly_queries(keywords, category, cookies, session, domain,
-					throttle, filing_date, ggplot, month_offset=[-6,18],
+					throttle, filing_date, ggplot, month_offset=[-12,18],
 					trends_url=DEFAULT_TRENDS_URL):
-	"""Gets interest data (quarterly) for the 6 months before and 18 months after specified date, then gets interest data for the whole period and merges this data.
+	"""Gets interest data (quarterly) for the 12 months before and 18 months after specified date, then gets interest data for the whole period and merges this data.
 
 		month_offset: [no. month back, no. months forward] to query
 	Returns daily data over the period.
@@ -445,7 +445,7 @@ def quarterly_queries(keywords, category, cookies, session, domain,
 	e1 = arrow.get(ended_range[-1]).replace(months=+1).datetime
 	e2 = arrow.utcnow().replace(weeks=-1).datetime
 	e = min(e1,e2)
-	print("Merging with overall period: {s} ~ {e}".format(s=s.date(), e=e.date()))
+	print("\n=> Merging with overall period: {s} ~ {e}".format(s=s.date(), e=e.date()))
 
 	response_args = {
 		'url': trends_url.format(domain=domain),
