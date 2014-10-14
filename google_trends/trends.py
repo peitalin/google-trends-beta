@@ -59,7 +59,6 @@ def main():
 		'--trends-url': "Address of Google's trends querying URL.",
 		'--throttle': "Number of seconds to space out requests, this is to avoid rate limiting.",
 		'--category': "Category for queries, e.g 0-7-107 for finance->investing. See categories.txt",
-		'--quiet-io': "Does not write entity type to csv file.",
 		'--ggplot': "Plots merged data series, requires ggplot"
 	}
 
@@ -75,7 +74,7 @@ def main():
 		('--start-date',    "start_date",        NOW.replace(months=-2)),
 		# General Arguments
 		('--end-date',      "end_date",          NOW),
-		('--output',        "batch_output_path", "terminal"),
+		('--output',        "output_path",       "terminal"),
 		('--username',      "username",          None),
 		('--password',      "password",          None),
 		('--login-url',     "login_url",         DEFAULT_LOGIN_URL),
@@ -83,7 +82,6 @@ def main():
 		('--trends-url',    "trends_url",        DEFAULT_TRENDS_URL),
 		('--throttle',      "throttle",          0),
 		('--category',      "category",          None),
-		('--quiet-io',      "quiet_io",          None),
 		('--ggplot',        "ggplot",            None)
 	)
 
@@ -147,21 +145,16 @@ def main():
 		keywords = list(keywords)
 		random.shuffle(keywords)
 		for keyword in keywords:
-			if os.path.exists(os.path.join(args.batch_output_path, csv_name(keyword))):
+			if os.path.exists(os.path.join(args.output_path, csv_name(keyword))):
 				continue
 			yield keyword
 
-	def output_results(IO_out, kw, quiet=None):
+	def output_results(IO_out, kw):
 		writer = csv.writer(IO_out)
-		if not quiet:
-			if kw.desc=="Search term":
-				writer.writerow(["Date", kw.keyword, kw.desc])
-			else:
-				writer.writerow(["Date", kw.keyword, kw.desc, kw.title])
-		else:
-			writer.writerow(["Date", kw.keyword])
+		# Headers
+		writer.writerow(["Date", kw.keyword, kw.desc, kw.title])
+		# Write IoT Data
 		[writer.writerow([str(s) for s in interest]) for interest in kw.interest]
-
 
 
 	args = parser.parse_args()
@@ -202,19 +195,32 @@ def main():
 								category=args.category,
 								ggplot=args.ggplot)
 
+	# from IPython import embed; embed()
+
 	for keyword_data in trend_generator:
-		if args.batch_output_path == "terminal":
+		if args.output_path == "terminal":
 			output_results(sys.stdout, keyword_data)
 		else:
-			if not os.path.exists(args.batch_output_path):
-				os.makedirs(args.batch_output_path)
+			if not os.path.exists(args.output_path):
+				os.makedirs(args.output_path)
 
-			output_filename = os.path.join(args.batch_output_path, \
+			output_filename = os.path.join(args.output_path, \
 								csv_name(keyword_data))
 
 			with open(output_filename, 'w+') as f:
-				output_results(f, keyword_data, args.quiet_io)
+				output_results(f, keyword_data)
 
+		if keyword_data.cik and keyword_data.querycounts:
+
+			qpath = os.path.join('cik-ipo/query_counts', args.category)
+			if not os.path.exists(qpath):
+				os.makedirs(qpath)
+
+			qcount_path = os.path.join(qpath, csv_name(keyword_data))
+			with open(qcount_path, 'w+') as f:
+				writer = csv.writer(f)
+				writer.writerow(['Missing Quarters'])
+				[writer.writerow([str(q) for q in qcount]) for qcount in keyword_data.querycounts]
 
 
 
@@ -222,7 +228,7 @@ def main():
 def get_trends(keyword_gen, username=None, password=None,
 			   start_date=arrow.utcnow().replace(months=-2),
 			   end_date=arrow.utcnow(),
-			   throttle=0,
+			   throttle=1,
 			   quarterly=None,
 			   category=None,
 			   ggplot=None,
@@ -279,16 +285,21 @@ def get_trends(keyword_gen, username=None, password=None,
 			# dates obtained from --cik-filing
 			fn_args['filing_date'] = keywords[0].filing_date
 			all_data = quarterly_queries(**fn_args)
+			# querycounts: number of all-zero quarterly queries
 		else:
 			# Single keyword query
 			fn_args['start_date'] = start_date
 			fn_args['end_date'] = end_date
 			all_data = single_query(**fn_args)
+			# querycounts = None # for rolling queries only
 
+
+		# from IPython import embed; embed()
 		# assign (date, counts) to each KeywordData object
 		for row in all_data[1:]:
 			date, counts = parse_ioi_row(row)
-			[keywords[i].add_interest_data(date, counts[i]) for i in range(len(counts))]
+			for i in range(len(keywords)):
+				keywords[i].add_interest_data(date, counts[i])
 
 		for kw in keywords:
 			yield kw	# yield KeywordData objects
@@ -384,9 +395,7 @@ def _check_data(keywords, formatted_data):
 		return formatted_data[1:]
 
 
-def quarterly_queries(keywords, category, cookies, session, domain,
-					throttle, filing_date, ggplot, month_offset=[-9,18],
-					trends_url=DEFAULT_TRENDS_URL):
+def quarterly_queries(keywords, category, cookies, session, domain, throttle, filing_date, ggplot, month_offset=[-9,18], trends_url=DEFAULT_TRENDS_URL):
 	"""Gets interest data (quarterly) for the 9 months before and 18 months after specified date, then gets interest data for the whole period and merges this data.
 
 		month_offset: [no. month back, no. months forward] to query
@@ -415,7 +424,7 @@ def quarterly_queries(keywords, category, cookies, session, domain,
 
 	# Iterate attention queries through each quarter
 	all_data = []
-	num_missing_queries = 1 	# Start on 1, use this to divide IoT later.
+	missing_queries = [] 	# use this to scale IoT later.
 	for start, end in zip(start_range, ended_range):
 		if start > last_week:
 			break
@@ -435,9 +444,10 @@ def quarterly_queries(keywords, category, cookies, session, domain,
 
 		if all([vals==0 for date,vals in query_data]):
 			query_data = [[date, 0] for date in arrow.Arrow.range('month', start, end)]
-			num_missing_queries += 1
+			missing_queries.append(1)
+		else:
+			missing_queries.append(0)
 		all_data.append(query_data)
-	num_missing_queries = min((num_missing_queries, 10))
 
 
 	# Get overall long-term trend data across entire queried period
@@ -490,7 +500,6 @@ def quarterly_queries(keywords, category, cookies, session, domain,
 
 		# calculate daily %change in IoI and adjust weekly values
 		adj_IoI = [ioi*mult for ioi,mult in zip(y_ioi, delta_ioi)]
-		adj_IoI = [round(x/num_missing_queries, 2) for x in adj_IoI]
 
 		adj_all_data = [[str(date.date()), round(ioi, 2)] for date,ioi in zip(common_date, adj_IoI)]
 	else:
@@ -498,12 +507,14 @@ def quarterly_queries(keywords, category, cookies, session, domain,
 		adj_all_data = [[str(date.date()), int(zero)] for date, zero in zip(*interpolate_ioi(*zip(*sum(all_data,[]))))]
 
 	# from IPython import embed; embed()
-	adj_all_data = [[x[0], round(x[1]/num_missing_queries,2)] for x in  adj_all_data]
 	heading = ["Date", keywords[0].title]
+	querycounts = list(zip((d.date() for d in start_range), missing_queries))
+	keywords[0].querycounts = querycounts
 
 	if not ggplot:
 		return [heading] + adj_all_data
 
+	## GGplot Only
 	else:
 		# GGPLOT MERGED GTRENDS PLOTS:
 		import pandas as pd
@@ -542,16 +553,11 @@ def quarterly_queries(keywords, category, cookies, session, domain,
 		# from IPython import embed
 		# embed()
 
-		# MISSING LEGEND, GGPLOT peice of crap
-		# g = ggplot(aes(x='Date', y='value', color='variable' ), data=melt) + \
-		# 	geom_line(alpha=0.5) + \
-		# 	scale_colour_manual(values=colors) + \
-		# 	ggtitle("Interest over time for '{}'".format(keywords[0].keyword)) + \
-		# 	ylab("Interest Over Time") + xlab("Date")
-
 		print(g)
 		# ggsave(BASEDIR + "/iot_{}.png".format(keywords[0].keyword), width=15, height=5)
 		return [heading] + adj_all_data
+
+
 
 
 

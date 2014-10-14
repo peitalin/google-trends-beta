@@ -33,6 +33,7 @@ class KeywordData(Exception):
         # obtained only from cik-file argument
         self.cik = None
         self.filing_date = None
+        self.querycounts = None
 
     def add_interest_data(self, date, count):
         self.interest.append((date, count))
