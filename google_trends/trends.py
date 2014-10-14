@@ -385,9 +385,9 @@ def _check_data(keywords, formatted_data):
 
 
 def quarterly_queries(keywords, category, cookies, session, domain,
-					throttle, filing_date, ggplot, month_offset=[-12,18],
+					throttle, filing_date, ggplot, month_offset=[-9,18],
 					trends_url=DEFAULT_TRENDS_URL):
-	"""Gets interest data (quarterly) for the 12 months before and 18 months after specified date, then gets interest data for the whole period and merges this data.
+	"""Gets interest data (quarterly) for the 9 months before and 18 months after specified date, then gets interest data for the whole period and merges this data.
 
 		month_offset: [no. month back, no. months forward] to query
 	Returns daily data over the period.
