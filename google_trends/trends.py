@@ -184,18 +184,18 @@ def main():
 
 	start_date = YYYY_MM(args.start_date)
 	end_date   = YYYY_MM(args.end_date)
-	trend_generator = get_trends(keyword_generator(keywords),
-								trends_url=args.trends_url,
-								quarterly=args.quarterly,
-								start_date=start_date,
-								end_date=end_date,
-								username=args.username,
-								password=args.password,
-								throttle=args.throttle,
-								category=args.category,
-								ggplot=args.ggplot)
+	trend_generator = get_trends(
+						keyword_generator(keywords),
+						trends_url=args.trends_url,
+						quarterly=args.quarterly,
+						start_date=start_date,
+						end_date=end_date,
+						username=args.username,
+						password=args.password,
+						throttle=args.throttle,
+						category=args.category,
+						ggplot=args.ggplot)
 
-	# from IPython import embed; embed()
 
 	for keyword_data in trend_generator:
 		if args.output_path == "terminal":
@@ -204,39 +204,40 @@ def main():
 			if not os.path.exists(args.output_path):
 				os.makedirs(args.output_path)
 
-			output_filename = os.path.join(args.output_path, \
-								csv_name(keyword_data))
+			output_filename = os.path.join(args.output_path, csv_name(keyword_data))
 
 			with open(output_filename, 'w+') as f:
 				output_results(f, keyword_data)
 
 		if keyword_data.cik and keyword_data.querycounts:
 
-			qpath = os.path.join('cik-ipo/query_counts', args.category)
+			qpath = os.path.join(BASEDIR, 'cik-ipo/query_counts', args.category)
 			if not os.path.exists(qpath):
 				os.makedirs(qpath)
 
 			qcount_path = os.path.join(qpath, csv_name(keyword_data))
 			with open(qcount_path, 'w+') as f:
 				writer = csv.writer(f)
-				writer.writerow(['Missing Quarters'])
+				writer.writerow(['Missing Quarters, '+ args.category])
 				[writer.writerow([str(q) for q in qcount]) for qcount in keyword_data.querycounts]
 
+		else:
+			raise(Exception("DEBUG: no keyword_data.cik or keyword_data.querycounts"))
 
 
 
 def get_trends(keyword_gen, username=None, password=None,
-			   start_date=arrow.utcnow().replace(months=-2),
-			   end_date=arrow.utcnow(),
-			   throttle=1,
-			   quarterly=None,
-			   category=None,
-			   ggplot=None,
-			   trends_url=DEFAULT_TRENDS_URL,
-			   login_url=DEFAULT_LOGIN_URL,
-			   auth_url=DEFAULT_AUTH_URL,
-			   primary_types=PRIMARY_TYPES,
-			   backup_types=BACKUP_TYPES):
+			start_date=arrow.utcnow().replace(months=-2),
+			end_date=arrow.utcnow(),
+			throttle=1,
+			quarterly=None,
+			category=None,
+			ggplot=None,
+			trends_url=DEFAULT_TRENDS_URL,
+			login_url=DEFAULT_LOGIN_URL,
+			auth_url=DEFAULT_AUTH_URL,
+			primary_types=PRIMARY_TYPES,
+			backup_types=BACKUP_TYPES):
 	""" Gets a collection of trends. Requires --keywords, --username and --password flags.
 
 		Arguments:
@@ -550,8 +551,7 @@ def quarterly_queries(keywords, category, cookies, session, domain, throttle, fi
 			ggtitle("Interest over time for '{}' ({})".format(keywords[0].keyword, entity_type)) + \
 			ylab("Interest Over Time") + xlab("Date")
 
-		# from IPython import embed
-		# embed()
+		# from IPython import embed; embed()
 
 		print(g)
 		# ggsave(BASEDIR + "/iot_{}.png".format(keywords[0].keyword), width=15, height=5)

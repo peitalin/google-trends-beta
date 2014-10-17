@@ -78,5 +78,6 @@ BACKUP_TYPES = {
     'brand',
     'topic',
     'software',
-    'fashion designer'
+    'fashion designer',
+    'trucking, except local business'
 }
