@@ -33,7 +33,7 @@ DEFAULT_TRENDS_URL = "http://www.{domain}/trends/trendsReport"
 INTEREST_OVER_TIME_HEADER = "Interest over time"
 EXPECTED_CONTENT_TYPE = "text/csv; charset=UTF-8"
 NOW = arrow.utcnow()
-BASEDIR = os.path.join(os.path.expanduser("~"), "Dropbox", "gtrends")
+BASEDIR = os.path.join(os.path.expanduser("~"), "Dropbox", "gtrends-beta")
 
 
 
@@ -213,16 +213,21 @@ def main():
 
 			qpath = os.path.join(BASEDIR, 'cik-ipo/query_counts', args.category)
 			if not os.path.exists(qpath):
+				print("Making dir: {}".format(qpath))
 				os.makedirs(qpath)
 
 			qcount_path = os.path.join(qpath, csv_name(keyword_data))
 			with open(qcount_path, 'w+') as f:
+				print("Writing querycounts to: {}".format(qcount_path))
 				writer = csv.writer(f)
 				writer.writerow(['Missing Quarters, '+ args.category])
 				[writer.writerow([str(q) for q in qcount]) for qcount in keyword_data.querycounts]
 
 		else:
 			raise(Exception("DEBUG: no keyword_data.cik or keyword_data.querycounts"))
+
+
+mv ~/Dropbox/gtrends/cik-ipo/query_counts ~/Dropbox/gtrends-beta
 
 
 
