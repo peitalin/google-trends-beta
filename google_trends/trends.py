@@ -401,8 +401,8 @@ def _check_data(keywords, formatted_data):
 		return formatted_data[1:]
 
 
-def quarterly_queries(keywords, category, cookies, session, domain, throttle, filing_date, ggplot, month_offset=[-9,18], trends_url=DEFAULT_TRENDS_URL):
-	"""Gets interest data (quarterly) for the 9 months before and 18 months after specified date, then gets interest data for the whole period and merges this data.
+def quarterly_queries(keywords, category, cookies, session, domain, throttle, filing_date, ggplot, month_offset=[-12,12], trends_url=DEFAULT_TRENDS_URL):
+	"""Gets interest data (quarterly) for the 12 months before and 12 months after specified date, then gets interest data for the whole period and merges this data.
 
 		month_offset: [no. month back, no. months forward] to query
 	Returns daily data over the period.
@@ -450,9 +450,11 @@ def quarterly_queries(keywords, category, cookies, session, domain, throttle, fi
 
 		if all([vals==0 for date,vals in query_data]):
 			query_data = [[date, 0] for date in arrow.Arrow.range('month', start, end)]
-			missing_queries.append(1)
+			missing_queries.append('missing')
+		elif len(query_data[0][0]) > 10:
+			missing_queries.append('weekly')
 		else:
-			missing_queries.append(0)
+			missing_queries.append('daily')
 		all_data.append(query_data)
 
 
@@ -512,7 +514,7 @@ def quarterly_queries(keywords, category, cookies, session, domain, throttle, fi
 		# from IPython import embed; embed()
 		adj_all_data = [[str(date.date()), int(zero)] for date, zero in zip(*interpolate_ioi(*zip(*sum(all_data,[]))))]
 
-	# from IPython import embed; embed()
+	from IPython import embed; embed()
 	heading = ["Date", keywords[0].title]
 	querycounts = list(zip((d.date() for d in start_range), missing_queries))
 	keywords[0].querycounts = querycounts
