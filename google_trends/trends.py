@@ -213,12 +213,12 @@ def main():
 
 			qpath = os.path.join(BASEDIR, 'cik-ipo/query_counts', args.category)
 			if not os.path.exists(qpath):
-				print("Making dir: {}".format(qpath))
+				# print("Making dir: {}".format(qpath))
 				os.makedirs(qpath)
 
 			qcount_path = os.path.join(qpath, csv_name(keyword_data))
 			with open(qcount_path, 'w+') as f:
-				print("Writing querycounts to: {}".format(qcount_path))
+				# print("Writing querycounts to: {}".format(qcount_path))
 				writer = csv.writer(f)
 				writer.writerow(['Missing Quarters, '+ args.category])
 				[writer.writerow([str(q) for q in qcount]) for qcount in keyword_data.querycounts]
@@ -227,7 +227,6 @@ def main():
 			raise(Exception("DEBUG: no keyword_data.cik or keyword_data.querycounts"))
 
 
-mv ~/Dropbox/gtrends/cik-ipo/query_counts ~/Dropbox/gtrends-beta
 
 
 
@@ -318,6 +317,7 @@ def _query_parameters(start_date, end_date, keywords, category):
 	days_in_month = 30 if start_date.month != 2 else 28
 	# February bugfix, rounds number of months down by 1
 	months = int(max((end_date - start_date).days, days_in_month)/days_in_month)
+	# print('=> query_param months: {}' . format(months))
 	# Sets number of months back for query
 	params = {"export": 1, "content": 1}
 	params["date"] = "{0} {1}m".format(start_date.strftime("%m/%Y"), months)
@@ -409,8 +409,8 @@ def quarterly_queries(keywords, category, cookies, session, domain, throttle, fi
 	"""
 
 	aw_range = arrow.Arrow.range
-	begin_period = arrow.get(filing_date).replace(months=month_offset[0])
-	ended_period = arrow.get(filing_date).replace(months=month_offset[1])
+	begin_period = arrow.get(filing_date, 'M-D-YYYY').replace(months=month_offset[0])
+	ended_period = arrow.get(filing_date, 'M-D-YYYY').replace(months=month_offset[1])
 
 	# Set up date ranges to iterate queries across
 	start_range = aw_range('month', YYYY_MM(begin_period),
@@ -512,7 +512,7 @@ def quarterly_queries(keywords, category, cookies, session, domain, throttle, fi
 		# from IPython import embed; embed()
 		adj_all_data = [[str(date.date()), int(zero)] for date, zero in zip(*interpolate_ioi(*zip(*sum(all_data,[]))))]
 
-	# from IPython import embed; embed()
+	from IPython import embed; embed()
 	heading = ["Date", keywords[0].title]
 	querycounts = list(zip((d.date() for d in start_range), missing_queries))
 	keywords[0].querycounts = querycounts
