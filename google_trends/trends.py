@@ -514,7 +514,7 @@ def quarterly_queries(keywords, category, cookies, session, domain, throttle, fi
 		# from IPython import embed; embed()
 		adj_all_data = [[str(date.date()), int(zero)] for date, zero in zip(*interpolate_ioi(*zip(*sum(all_data,[]))))]
 
-	from IPython import embed; embed()
+	# from IPython import embed; embed()
 	heading = ["Date", keywords[0].title]
 	querycounts = list(zip((d.date() for d in start_range), missing_queries))
 	keywords[0].querycounts = querycounts
