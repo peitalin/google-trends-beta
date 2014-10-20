@@ -28,10 +28,10 @@ if not findProcess('dropbox-dist'):
 # ~/.dropbox-dist/dropboxd &
 # python3 ~/Dropbox/gtrends-beta/gtrends_iot.py
 # ~/.dropbox-dist/dropboxd & ps -ef | grep dropbox & python3 $base_dir/gtrends_iot.py
-#
 
-cat_codes = ['0', '0-7',  '0-12', '0-7-107', '0-12-784']
-categories = ['all', 'finance', 'business_industrial', 'investing', 'business-news']
+
+cat_codes = ['0', '0-7',  '0-12', ]
+categories = ['all', 'finance', 'business_industrial', ]
 
 # 0-7 -> finance
 # 0-7-107 -> investing
@@ -40,6 +40,7 @@ categories = ['all', 'finance', 'business_industrial', 'investing', 'business-ne
 # 0 -> all
 # 0-12-1138-1139 -> investment-banking
 # 0-12: Business & Industrial
+
 
 # categories = shuffle(list(zip(cat_codes, categories)))
 categories = list(zip(cat_codes, categories))
@@ -87,13 +88,6 @@ for ccode, category in categories:
 """
 
 
-"""python3 $base_dir/google_trends/trends.py \
-        --username dgtesting12@gmail.com \
-        --password justfortesting! \
-        --throttle "random" \
-        --cik-file $base_dir/ipo-uw/ipo-uw.csv  \
-        --output $base_dir/ipo-uw2/all \
-        --category 0"""
 
 
 
