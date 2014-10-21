@@ -423,9 +423,12 @@ def aligned_weekly(query_data, all_data):
 	return True
 
 
-def week_last_date(date):
+def weekly_date(date, last_date='last'):
 	if isinstance(date, str):
-		date = arrow.get(date[-10:])
+		if last_date=='last':
+			date = arrow.get(date[-10:])
+		else:
+			date = arrow.get(date[:10])
 	return date
 
 
@@ -490,20 +493,23 @@ def quarterly_queries(keywords, category, cookies, session, domain, throttle, fi
 		try:
 			if not aligned_weekly(query_data, all_data):
 				## Workaround: shift filing date
-				q1 = week_last_date(all_data[-1][-1][0])
-				q2 = week_last_date(query_data[0][0])
+				q1 = weekly_date(all_data[-1][-1][0])
+				q2 = weekly_date(query_data[0][0])
+
 				if q1 < q2:
-					start = arrow.get(start).replace(months=-3)
+					start = arrow.get(start).replace(months=-1)
 					response_args['params'] = _query_parameters(start, end, keywords, category)
-					## Do a new 6month query, overlap/replace previous 3month query.
+					## Do a new 4month query, overlap/replace previous month.
 					query_data = _check_data(keywords,
 									_process_response(
 										_get_response(**response_args)))
 					if all_data[:-1] != []:
-						all_data = all_data[:-1]
-				else:
-					# match 01/month/yyyy query with weekly query
-					query_data = [d for d in query_data if q1 >= week_last_date(d[0])]
+						q2 = weekly_date(query_data[0][0], 'start')
+						all_data[-1] = [d for d in all_data[-1] if q2 > weekly_date(d[0])]
+
+				elif q1 >= q2:
+					# if q1 > 1st date in query_data, remove the first few entries
+					query_data = [d for d in query_data if q1 < weekly_date(d[0])]
 
 		except IndexError:
 			pass
@@ -511,7 +517,6 @@ def quarterly_queries(keywords, category, cookies, session, domain, throttle, fi
 			all_data.append(query_data)
 
 
-	# from IPython import embed; embed()
 
 	# Get overall long-term trend data across entire queried period
 	s = begin_period.replace(weeks=-2).datetime
