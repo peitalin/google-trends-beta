@@ -314,9 +314,12 @@ def get_trends(keyword_gen, username=None, password=None,
 def _query_parameters(start_date, end_date, keywords, category):
 	"Formats query parameters into a dictionary and passes to session.get()"
 
-	days_in_month = 30 if start_date.month != 2 else 28
+	s = arrow.get(start_date)
+	e = arrow.get(end_date)
+	days_in_month = 30 if s.month != 2 else 28
 	# February bugfix, rounds number of months down by 1
-	months = int(max((end_date - start_date).days, days_in_month)/days_in_month)
+	months = int(max((e - s).days, days_in_month)/days_in_month)
+
 	# print('=> query_param months: {}' . format(months))
 	# Sets number of months back for query
 	params = {"export": 1, "content": 1}
@@ -363,8 +366,7 @@ def _get_response(url, params, cookies, session):
 				"Maybe an invalid category or date was supplied".format(
 					response.headers["content-type"])))
 	else:
-		from IPython import embed
-		embed()
+		from IPython import embed; embed()
 
 
 def _process_response(response_data):
@@ -401,7 +403,36 @@ def _check_data(keywords, formatted_data):
 		return formatted_data[1:]
 
 
-def quarterly_queries(keywords, category, cookies, session, domain, throttle, filing_date, ggplot, month_offset=[-12,12], trends_url=DEFAULT_TRENDS_URL):
+
+def aligned_weekly(query_data, all_data):
+	"checks if weekly dates do not coincide with 1st day of month"
+	q1 = arrow.get(query_data[0][0])
+	q2 = all_data[-1][-1][0]
+
+	if isinstance(q2, str):
+		q2 = arrow.get(q2[-10:])
+
+	if abs((q2 - q1).days) > 1:
+		print(
+		"""WARNING: Weekly dates not matched with last query's end-date:
+		When trends returns weekly data, it does not guarantee that
+		the first week begins on the 1st day of the month.
+		This means the first few days may be truncated if the
+		previous query was not also in weekly format.\n""")
+		return False
+	return True
+
+
+def week_last_date(date):
+	if isinstance(date, str):
+		date = arrow.get(date[-10:])
+	return date
+
+
+
+
+
+def quarterly_queries(keywords, category, cookies, session, domain, throttle, filing_date, ggplot, month_offset=[-12, 12], trends_url=DEFAULT_TRENDS_URL):
 	"""Gets interest data (quarterly) for the 12 months before and 12 months after specified date, then gets interest data for the whole period and merges this data.
 
 		month_offset: [no. month back, no. months forward] to query
@@ -448,15 +479,39 @@ def quarterly_queries(keywords, category, cookies, session, domain, throttle, fi
 						_process_response(
 							_get_response(**response_args)))
 
-		if all([vals==0 for date,vals in query_data]):
-			query_data = [[date, 0] for date in arrow.Arrow.range('month', start, end)]
+		if all(int(vals)==0 for date,vals in query_data):
+			query_data = [[date, '0'] for date in arrow.Arrow.range('day', start, end)]
 			missing_queries.append('missing')
 		elif len(query_data[0][0]) > 10:
 			missing_queries.append('weekly')
 		else:
 			missing_queries.append('daily')
-		all_data.append(query_data)
 
+		try:
+			if not aligned_weekly(query_data, all_data):
+				## Workaround: shift filing date
+				q1 = week_last_date(all_data[-1][-1][0])
+				q2 = week_last_date(query_data[0][0])
+				if q1 < q2:
+					start = arrow.get(start).replace(months=-3)
+					response_args['params'] = _query_parameters(start, end, keywords, category)
+					## Do a new 6month query, overlap/replace previous 3month query.
+					query_data = _check_data(keywords,
+									_process_response(
+										_get_response(**response_args)))
+					if all_data[:-1] != []:
+						all_data = all_data[:-1]
+				else:
+					# match 01/month/yyyy query with weekly query
+					query_data = [d for d in query_data if q1 >= week_last_date(d[0])]
+
+		except IndexError:
+			pass
+		finally:
+			all_data.append(query_data)
+
+
+	# from IPython import embed; embed()
 
 	# Get overall long-term trend data across entire queried period
 	s = begin_period.replace(weeks=-2).datetime
@@ -476,6 +531,8 @@ def quarterly_queries(keywords, category, cookies, session, domain, throttle, fi
 					_process_response(
 						_get_response(**response_args)))
 
+
+
 	if len(query_data) > 1:
 		# compute changes in IoI (interest over time) per quarter
 		# and merged quarters together after interpolating data
@@ -494,8 +551,12 @@ def quarterly_queries(keywords, category, cookies, session, domain, throttle, fi
 
 		qdate = [date for date, delta_ioi in all_ioi_delta]
 		delta_ioi = [delta_ioi for date, delta_ioi in all_ioi_delta]
-		ydate = [date[-10:] if len(date) > 10 else date for date,ioi in query_data]
-		yIoI  = [float(ioi) for date,ioi in query_data]
+		ydate = [date[-10:] if len(date) > 10 else date for date, ioi in query_data]
+		try:
+			yIoI  = [float(ioi) for date, ioi in query_data]
+		except:
+			# from IPython import embed; embed()
+			yIoI = [float(ioi) for date, ioi in query_data[:-1]]
 		ydate, yIoI = interpolate_ioi(ydate, yIoI)
 
 		# match quarterly and yearly dates and get correct delta IoI
@@ -511,7 +572,6 @@ def quarterly_queries(keywords, category, cookies, session, domain, throttle, fi
 
 		adj_all_data = [[str(date.date()), round(ioi, 2)] for date,ioi in zip(common_date, adj_IoI)]
 	else:
-		# from IPython import embed; embed()
 		adj_all_data = [[str(date.date()), int(zero)] for date, zero in zip(*interpolate_ioi(*zip(*sum(all_data,[]))))]
 
 	# from IPython import embed; embed()

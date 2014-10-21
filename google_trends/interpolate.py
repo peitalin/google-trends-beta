@@ -128,7 +128,7 @@ def change_in_ioi(dates, IoT):
 
     from math import log10, log
 
-    dates, IoT = interpolate_ioi(dates, IoT)
+    dates_new, IoT = interpolate_ioi(dates, IoT)
     IoT = conform_interest_over_time(IoT)
     delta_IoT = [1]
 
@@ -136,8 +136,6 @@ def change_in_ioi(dates, IoT):
         f1 = 1 + float(f1)
         f2 = 1 + float(f2)
         relative_effect = log10(f2/f1)
-        # if relative_effect < 0:
-        #     relative_effect = 0
         # Google Trends appears to scale interest on log base 10
         # natural log yields highly volatile time series
         if relative_effect < -0.9:
@@ -146,10 +144,9 @@ def change_in_ioi(dates, IoT):
         try:
             delta_IoT.append(1+log10(1+relative_effect))
         except ValueError:
-            from IPython import embed
-            embed()
+            from IPython import embed; embed()
 
-    return dates, delta_IoT
+    return dates_new, delta_IoT
 
 
 
