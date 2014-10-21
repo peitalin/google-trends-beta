@@ -414,11 +414,11 @@ def aligned_weekly(query_data, all_data):
 
 	if abs((q2 - q1).days) > 1:
 		print(
-		"""WARNING: Weekly dates not matched with last query's end-date:
+		"""\nWARNING: Weekly dates not matched with last query's end-date:
 		When trends returns weekly data, it does not guarantee that
 		the first week begins on the 1st day of the month.
 		This means the first few days may be truncated if the
-		previous query was not also in weekly format.\n""")
+		previous query was not also in weekly format.\n\t=> Aligning dates...\n""")
 		return False
 	return True
 
