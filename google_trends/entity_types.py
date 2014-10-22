@@ -1,4 +1,8 @@
 
+# Currently hard coded to retrive anything with 'company' in entity type if 'company is included in PRIMARY_TYPES
+# This is in line 52 of disambiguate.py
+# Remove 'company' from primary_types and define your own entity types.
+
 PRIMARY_TYPES = {
     'automaker company',
     'airline',

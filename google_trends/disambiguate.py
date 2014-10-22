@@ -49,22 +49,11 @@ def disambiguate_keywords(keyword_generator, session, cookies,
             try:
                 entities = json.loads(entity_data.content.decode('utf-8'))["entityList"]
 
-                firms = [e for e in entities if e['type'].lower() in primary_types
+                if 'company' in primary_types:
+                    firms = [e for e in entities if e['type'].lower() in primary_types
                             or 'company' in e['type'].lower() or 'business' in e['type'].lower()]
-
-                # from IPython import embed
-                # embed()
-
-                # new_etypes = [e['type'] for e in entities]
-                # if new_etypes:
-                #     basedir = os.path.join(*os.path.abspath(__file__).split('/')[:-2])
-                #     entity_dir = os.path.join(basedir, 'input-files', 'entity_list.txt')
-                #     with open(entity_dir, "r+") as f:
-                #         etypes = f.read().split('\n')
-                #     if set(new_etypes) - set(etypes):
-                #         etypes += list(set(new_etypes) - set(etypes))
-                #         with open(entity_dir, "w") as f:
-                #             f.write('\n'.join(etypes))
+                else:
+                    firms = [e for e in entities if e['type'].lower() in primary_types]
 
                 if not firms:
                     firms = [e for e in entities if e['type'].lower() in backup_types]

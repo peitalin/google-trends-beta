@@ -1,7 +1,7 @@
 
 ## Gtrends-beta
 
-The script pulls 'interest-over-time' queries from Google Trends and utilizes the new word disambiguation features of Gtrends Beta (2013 Q4). Matches on specified entity types and category.
+This script pulls 'interest-over-time' queries from Google Trends and uses the entity disambiguation features of Gtrends Beta. Matches on specified entity types and category.
 
 
 The program inputs the original search term and disambiguates between various
@@ -21,19 +21,6 @@ pip install -r requirements.txt
 
 Requires:
 - Google account
-- PhantomJS + Selenium webdriver if running this program over remote servers. Google sometimes requires mobile authentication when loggin in from new locations/IPs.
-
-######OS X:
-    sudo brew install phantomjs
-
-######Ubuntu:
-    sudo apt-get install phantomjs
-
-######Arch Linux:
-    sudo pacman -S phantomjs
-
-
-
 
 
 #### EXAMPLE COMMANDS
