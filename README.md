@@ -12,6 +12,9 @@ entity types, then returns the correct company/corporate type matched by phrase 
 
 
 
+ps -ef | grep dropbox; python3 $base_dir/gtrends_iot.py
+
+
 
 ### INSTRUCTIONS:
 pip install -r requirements.txt
@@ -59,7 +62,6 @@ To get different entity types, define entity types in __entity_types.py__. Curre
         --username $GMAIL_USER \
         --password justfortesting! \
         --keyword "JP Morgan" \
-        --throttle "random" \
         --category 0-7
 
 
@@ -79,7 +81,7 @@ To get different entity types, define entity types in __entity_types.py__. Curre
 This iterates quarterly queries (for daily data) then merges with long term trends data through interpolation (log10 changes in daily interest).
 
 
-##### Quarterly queries -6 +18 months around a date.
+##### Quarterly queries -12 +12 months around a date.
 
     python3 $base_dir/google_trends/trends.py \
         --username $GMAIL_USER \

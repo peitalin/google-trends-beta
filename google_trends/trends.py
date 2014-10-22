@@ -224,7 +224,7 @@ def main():
 				[writer.writerow([str(q) for q in qcount]) for qcount in keyword_data.querycounts]
 
 		else:
-			raise(Exception("DEBUG: no keyword_data.cik or keyword_data.querycounts"))
+			if DEBUG: print("Warning!: no keyword_data.cik or keyword_data.querycounts")
 
 
 
@@ -447,8 +447,8 @@ def quarterly_queries(keywords, category, cookies, session, domain, throttle, fi
 	"""
 
 	aw_range = arrow.Arrow.range
-	begin_period = arrow.get(filing_date, 'M-D-YYYY').replace(months=month_offset[0])
-	ended_period = arrow.get(filing_date, 'M-D-YYYY').replace(months=month_offset[1])
+	begin_period = aget(filing_date).replace(months=month_offset[0])
+	ended_period = aget(filing_date).replace(months=month_offset[1])
 
 	# Set up date ranges to iterate queries across
 	start_range = aw_range('month', YYYY_MM(begin_period),
@@ -667,7 +667,6 @@ def single_query(keywords, category, cookies, session, domain, throttle,
 
 
 
-
 def parse_ioi_row(row):
 	""" Formats a row of interest-over-time data (ioi).
 		Arguments: row -- A list of strings
@@ -695,6 +694,15 @@ def YYYY_MM(date_obj):
 	date_obj = arrow.get(date_obj)
 	return arrow.get(date_obj.format("YYYY-MM"))
 
+
+def aget(date):
+	import re
+	if re.search(r'[-/]\d{4}$', date):
+		return arrow.get(date[-7:].replace('/', '-'), 'M-YYYY')
+	elif re.search(r'^\d{4}[-/]', date):
+		return arrow.get(date.replace('/', '-'), 'YYYY-M')
+	else:
+		return arrow.get(date)
 
 
 
