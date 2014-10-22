@@ -21,9 +21,14 @@ def interpolate_ioi(dates, IoT):
     def date_range(dates):
         if isinstance(dates[0], str):
             s = arrow.get(dates[0][:10])
+        else:
+            s = dates[0]
+
+        if isinstance(dates[-1], str):
             e = arrow.get(dates[-1][-10:])
         else:
-            s, e = dates[0], dates[-1]
+            e = dates[-1]
+
         return [x.datetime for x in arrow.Arrow.range('day', s, e)]
 
     # embed()
@@ -148,42 +153,4 @@ def change_in_ioi(dates, IoT):
 
     return dates_new, delta_IoT
 
-
-
-
-# def plot_merged_IOI_data():
-
-
-#     import pandas as pd
-#     import matplotlib.pyplot as plt
-#     from ggplot import ggplot, geom_line, ggtitle, ggsave, scale_colour_manual, ylab, xlab, aes
-
-#     ydat = pd.DataFrame(list(zip(common_date, y_ioi)), columns=["Date", 'Weekly series'])
-#     mdat = pd.DataFrame(list(zip(common_date, adj_IoI)), columns=['Date', 'Merged series'])
-#     qdat = pd.DataFrame(list(zip(common_date, qdat_interp)), columns=['Date', 'Daily series'])
-#     ddat = ydat.merge(mdat, on='Date').merge(qdat,on='Date')
-#     ddat['Date'] = list(map(pd.to_datetime, ddat['Date']))
-
-#     ydat['Date'] = list(map(pd.to_datetime, ydat['Date']))
-#     mdat['Date'] = list(map(pd.to_datetime, mdat['Date']))
-#     qdat['Date'] = list(map(pd.to_datetime, qdat['Date']))
-
-#     newdat = pd.melt(ddat[['Date', 'Merged series', 'Daily series', 'Weekly series']], id_vars='Date')
-#     newdat.sort('variable', inplace=True)
-
-#     colors = [
-#         (0.467, 0.745, 0.88), # blue
-#         (0.706, 0.486, 0.78), # purple
-#         (0.839, 0.373, 0.373) # red
-#     ]
-
-#     show = ggplot(aes(x='Date', y='value', color='variable'), data=newdat) + \
-#         geom_line(aes(x='Date', y='Daily series'), data=qdat, alpha=0.5, color=colors[0]) + \
-#         geom_line(aes(x='Date', y='Merged series'), data=mdat, alpha=0.9, color=colors[1]) + \
-#         geom_line(aes(x='Date', y='Weekly series'), data=ydat, alpha=0.5, color=colors[2], size=1.5) + \
-#         geom_line(aes(x='Date', y='value', color='variable'), data=newdat, alpha=0.0) +  scale_colour_manual(values=colors) + \
-#         ggtitle("Interest over time for '{}'".format(keywords[0].keyword)) + \
-#         ylab("Interest Over Time") + xlab("Date")
-
-#     ggsave(filename='merged_{}'.format(keywords[0].keyword), width=15, height=4)
 

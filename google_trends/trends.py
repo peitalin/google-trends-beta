@@ -34,7 +34,7 @@ INTEREST_OVER_TIME_HEADER = "Interest over time"
 EXPECTED_CONTENT_TYPE = "text/csv; charset=UTF-8"
 NOW = arrow.utcnow()
 BASEDIR = os.path.join(os.path.expanduser("~"), "Dropbox", "gtrends-beta")
-
+DEBUG = False
 
 
 def main():
@@ -406,19 +406,23 @@ def _check_data(keywords, formatted_data):
 
 def aligned_weekly(query_data, all_data):
 	"checks if weekly dates do not coincide with 1st day of month"
-	q1 = arrow.get(query_data[0][0])
+	q1 = query_data[0][0]
 	q2 = all_data[-1][-1][0]
+
+	if isinstance(q1, str):
+		q1 = arrow.get(q1[:10])
 
 	if isinstance(q2, str):
 		q2 = arrow.get(q2[-10:])
 
 	if abs((q2 - q1).days) > 1:
-		print(
+		if DEBUG: print(
 		"""\nWARNING: Weekly dates not matched with last query's end-date:
 		When trends returns weekly data, it does not guarantee that
 		the first week begins on the 1st day of the month.
 		This means the first few days may be truncated if the
-		previous query was not also in weekly format.\n\t=> Aligning dates...\n""")
+		previous query was not also in weekly format.\n""")
+		print("\t=> Encountered weekly dates! aligning daily and monthly dates...\n")
 		return False
 	return True
 
@@ -513,6 +517,9 @@ def quarterly_queries(keywords, category, cookies, session, domain, throttle, fi
 
 		except IndexError:
 			pass
+		except:
+			from IPython import embed; embed()
+
 		finally:
 			all_data.append(query_data)
 
