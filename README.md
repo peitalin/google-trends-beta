@@ -12,8 +12,6 @@ entity types, then returns the correct company/corporate type matched by phrase 
 
 
 
-ps -ef | grep dropbox; python3 $base_dir/gtrends_iot.py
-
 
 
 ### INSTRUCTIONS:
