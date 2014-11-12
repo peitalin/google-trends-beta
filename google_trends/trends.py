@@ -698,7 +698,8 @@ def YYYY_MM(date_obj):
 def aget(date):
 	import re
 	if re.search(r'[-/]\d{4}$', date):
-		return arrow.get(date[-7:].replace('/', '-'), 'M-YYYY')
+		# US date: M-D-YYYY
+		return arrow.get(date[:3]+date[-4:].replace('/', '-'), 'M-YYYY')
 	elif re.search(r'^\d{4}[-/]', date):
 		return arrow.get(date.replace('/', '-'), 'YYYY-M')
 	else:
