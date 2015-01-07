@@ -264,7 +264,7 @@ def get_trends(keyword_gen, username=None, password=None,
 
 
 	while True: # For each keyword:
-		try:	# try to get correct keywords [KeywordData object(s)].
+		try:    # try to get correct keywords [KeywordData object(s)].
 			keywords = disambiguate_keywords(keyword_gen, session, cookies,
 											primary_types=primary_types,
 											backup_types=backup_types)
@@ -307,7 +307,7 @@ def get_trends(keyword_gen, username=None, password=None,
 				keywords[i].add_interest_data(date, counts[i])
 
 		for kw in keywords:
-			yield kw	# yield KeywordData objects
+			yield kw    # yield KeywordData objects
 
 
 
@@ -468,7 +468,7 @@ def quarterly_queries(keywords, category, cookies, session, domain, throttle, fi
 
 	# Iterate attention queries through each quarter
 	all_data = []
-	missing_queries = [] 	# use this to scale IoT later.
+	missing_queries = []    # use this to scale IoT later.
 	for start, end in zip(start_range, ended_range):
 		if start > last_week:
 			break
@@ -674,7 +674,12 @@ def parse_ioi_row(row):
 		Returns a 2-tuple (date, [counts1, counts2, ..., countsn])
 		representing a date and associated counts for that date
 	"""
-	date, *counts = row
+	if PY3:
+		date, *counts = row
+	else:
+		date = row[0]
+		counts = row[1:]
+
 	if isinstance(date, str):
 		date = arrow.get(date[:10]).date() # len>10 => date range (not yyyy-mm-dd format)
 		# date = date.strftime('%Y-%m-%d')

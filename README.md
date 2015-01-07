@@ -19,6 +19,7 @@ pip install -r requirements.txt
 
 Requires:
 - Google account
+- Python compiled with SSLv2 support
 
 
 #### EXAMPLE COMMANDS
