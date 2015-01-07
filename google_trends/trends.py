@@ -674,11 +674,11 @@ def parse_ioi_row(row):
 		Returns a 2-tuple (date, [counts1, counts2, ..., countsn])
 		representing a date and associated counts for that date
 	"""
-	if PY3:
-		date, *counts = row
-	else:
-		date = row[0]
-		counts = row[1:]
+	# if PY3:
+	# 	date, *counts = row
+	# else:
+	date = row[0]
+	counts = row[1:]
 
 	if isinstance(date, str):
 		date = arrow.get(date[:10]).date() # len>10 => date range (not yyyy-mm-dd format)

@@ -1,6 +1,9 @@
 
 import arrow
-from IPython import embed
+try:
+	from IPython import embed
+except:
+	pass
 
 
 
