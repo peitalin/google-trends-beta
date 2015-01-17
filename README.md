@@ -1,12 +1,11 @@
 
-## Gtrends-beta
+## Google Trends Beta
 
 This script pulls 'interest-over-time' queries from Google Trends and uses the entity disambiguation features of Gtrends Beta. Matches on specified entity types and category.
 
 
 The program inputs the original search term and disambiguates between various
 entity types, then returns the correct company/corporate type matched by phrase similarity. In case there are multiple company types (e.g. Wachovia Securities, Wachovia Group). Default entity types are firms and investment banks.
-**Python 2 not supported.
 
 ![alt tag](https://raw.githubusercontent.com/peitalin/gtrends-beta/master/input-files/iot_gif.gif)
 
