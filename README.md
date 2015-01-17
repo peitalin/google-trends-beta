@@ -1,7 +1,7 @@
 
 ## Google Trends Beta
 
-This script pulls 'interest-over-time' queries from Google Trends and uses the entity disambiguation features of Gtrends Beta. Matches on specified entity types and category.
+This script pulls 'interest-over-time' queries from Google Trends and uses the entity disambiguation features introduced in Google Trends Beta. Matches on specified entity types and category.
 
 
 The program inputs the original search term and disambiguates between various
