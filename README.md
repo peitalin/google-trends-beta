@@ -12,13 +12,11 @@ entity types, then returns the correct company/corporate type matched by phrase 
 
 
 
-
 ### INSTRUCTIONS:
 pip install -r requirements.txt
 
 Requires:
 - Google account
-- Python compiled with SSLv2 support
 
 
 #### EXAMPLE COMMANDS
@@ -81,7 +79,7 @@ __Data Format__:
 Date, Entity Name, Entity Type, Original Search Term
 
 
-##### Finance Categories
+##### Example Categories
 
     0-12: Business & Industrial
         0-12-1138: Business Finance
