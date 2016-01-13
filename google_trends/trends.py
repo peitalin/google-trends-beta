@@ -486,6 +486,10 @@ def quarterly_queries(keywords, category, cookies, session, domain, throttle, fi
 						_process_response(
 							_get_response(**response_args)))
 
+		# from IPython import embed; embed()
+		if query_data[1] == '':
+			query_data = [[date, '0'] for date in arrow.Arrow.range('day', start, end)]
+			missing_queries.append('missing')
 		if all(int(vals)==0 for date,vals in query_data):
 			query_data = [[date, '0'] for date in arrow.Arrow.range('day', start, end)]
 			missing_queries.append('missing')
@@ -543,9 +547,10 @@ def quarterly_queries(keywords, category, cookies, session, domain, throttle, fi
 					_process_response(
 						_get_response(**response_args)))
 
+	if query_data[1] == '':
+		adj_all_data = [[str(date.date()), int(zero)] for date, zero in zip(*interpolate_ioi(*zip(*sum(all_data,[]))))]
 
-
-	if len(query_data) > 1:
+	elif len(query_data) > 1:
 		# compute changes in IoI (interest over time) per quarter
 		# and merged quarters together after interpolating data
 		# with daily data.
@@ -563,11 +568,12 @@ def quarterly_queries(keywords, category, cookies, session, domain, throttle, fi
 
 		qdate = [date for date, delta_ioi in all_ioi_delta]
 		delta_ioi = [delta_ioi for date, delta_ioi in all_ioi_delta]
-		ydate = [date[-10:] if len(date) > 10 else date for date, ioi in query_data]
+
 		try:
+			ydate = [date[-10:] if len(date) > 10 else date for date, ioi in query_data]
 			yIoI  = [float(ioi) for date, ioi in query_data]
 		except:
-			# from IPython import embed; embed()
+			from IPython import embed; embed()
 			yIoI = [float(ioi) for date, ioi in query_data[:-1]]
 		ydate, yIoI = interpolate_ioi(ydate, yIoI)
 

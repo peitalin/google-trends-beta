@@ -5,7 +5,7 @@ import requests, sys, os, re, time
 import colorama
 from google_class import AuthException
 
-
+requests.packages.urllib3.disable_warnings()
 py3 = sys.version_info[0] == 3
 if not py3:
     from urlparse import urlparse
