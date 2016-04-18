@@ -14,5 +14,5 @@ setup(name='google_trends_beta',
 >>>>>>> cbb54418f3e864e560b97e001f95061ffbb3a12b
       author_email='peita_lin@hotmail.com',
       packages=['google_trends_beta'],
-      install_requires=["argparse", "requests", "arrow", "selenium"]
+      install_requires=["argparse", "requests", "arrow", "selenium", "colorama"]
      )
