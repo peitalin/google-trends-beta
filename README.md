@@ -21,12 +21,10 @@ Requires:
 
 #### EXAMPLE COMMANDS
     export GMAIL_USER="username@gmail.com"
-    export base_dir="$HOME/gtrends-beta"
-
 
 #####Single keyword to std out
 
-    python3 $base_dir/google_trends/trends.py \
+    python3 ./google_trends/trends.py \
         --username $GMAIL_USER \
         --password justfortesting! \
         --keyword "Tesla"  \
@@ -41,7 +39,7 @@ To get different entity types, define entity types in __entity_types.py__. Curre
 
 #####Category filters: JP Morgan -> Category 0-7 (Finance)
 
-    python3 $base_dir/google_trends/trends.py \
+    python3 ./google_trends/trends.py \
         --username $GMAIL_USER \
         --password justfortesting! \
         --keyword "JP Morgan" \
@@ -51,7 +49,7 @@ To get different entity types, define entity types in __entity_types.py__. Curre
 
 ##### Merged daily + monthly series
 
-    python3 $base_dir/google_trends/trends.py \
+    python3 ./google_trends/trends.py \
         --username $GMAIL_USER \
         --password justfortesting! \
         --quarterly "2012-05" \
@@ -66,7 +64,7 @@ This iterates quarterly queries (for daily data) then merges with long term tren
 
 ##### Quarterly queries -12 +12 months around a date.
 
-    python3 $base_dir/google_trends/trends.py \
+    python3 ./google_trends/trends.py \
         --username $GMAIL_USER \
         --password justfortesting! \
         --quarterly "2014-05" \
