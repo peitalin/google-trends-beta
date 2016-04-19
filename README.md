@@ -18,6 +18,8 @@ pip install -r requirements.txt
 Requires:
 - Google account
 
+You may need to login to your gmail account at least once on the computer you are running the script, before exeucting this script (gets a specific UID cookie). The selenium framework attempts to emulate browser login automatically but may fail.
+
 
 #### EXAMPLE COMMANDS
     export GMAIL_USER="username@gmail.com"
@@ -34,7 +36,7 @@ Requires:
 ######Disambiguation features:
 This query returns "Tesla Motors" queries rather than "Nikola Tesla" or "tesla coils" for example.
 
-To get different entity types, define entity types in __entity_types.py__. Currently filters for companies and investment banking firms.
+To get different entity types, define specific entity types in __entity_types.py__. Currently filters for companies and investment banking firms.
 
 
 #####Category filters: JP Morgan -> Category 0-7 (Finance)
